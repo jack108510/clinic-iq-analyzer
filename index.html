@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Clinic IQ — Price Analyzer</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#080808;color:#f0f0f0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:40px 20px}
+h1{font-size:1.6rem;font-weight:800;margin-bottom:6px}
+.sub{color:#666;font-size:.85rem;margin-bottom:40px}
+.drops{display:flex;gap:16px;width:100%;max-width:720px;margin-bottom:24px}
+.drop{flex:1;border:2px dashed #2a2a2a;border-radius:14px;padding:30px 20px;text-align:center;cursor:pointer;transition:border-color .2s;background:#0e0e0e}
+.drop.over,.drop.has-file{border-color:#3b82f6}
+.drop.has-file{background:#0d1929}
+.drop-icon{font-size:2rem;margin-bottom:10px}
+.drop-label{font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#888;margin-bottom:6px}
+.drop-name{font-size:.78rem;color:#3b82f6;margin-top:8px;word-break:break-all}
+input[type=file]{display:none}
+button{background:#3b82f6;color:#fff;border:none;padding:14px 40px;border-radius:12px;font-size:1rem;font-weight:700;cursor:pointer;width:100%;max-width:720px;margin-bottom:16px}
+button:disabled{background:#1e3a5f;color:#4a6fa5;cursor:not-allowed}
+#status{font-size:.85rem;color:#888;text-align:center;min-height:20px;max-width:720px}
+#status.error{color:#ef4444}
+#status.success{color:#22c55e}
+</style>
+</head>
+<body>
+<h1>Clinic IQ — Price Analyzer</h1>
+<p class="sub">Upload two Cornerstone exports. We'll calculate inflation recommendations and email you the results.</p>
+
+<div class="drops">
+  <div class="drop" id="drop1" onclick="document.getElementById('file1').click()" ondragover="dv(event,this)" ondragleave="dl(this)" ondrop="df(event,'file1',this,'name1')">
+    <div class="drop-icon">📋</div>
+    <div class="drop-label">Invoice Item Setup</div>
+    <div style="font-size:.75rem;color:#555">Current prices list</div>
+    <div class="drop-name" id="name1"></div>
+    <input type="file" id="file1" accept=".csv" onchange="setFile('file1','name1','drop1')"/>
+  </div>
+  <div class="drop" id="drop2" onclick="document.getElementById('file2').click()" ondragover="dv(event,this)" ondragleave="dl(this)" ondrop="df(event,'file2',this,'name2')">
+    <div class="drop-icon">📊</div>
+    <div class="drop-label">Invoice Item Sales</div>
+    <div style="font-size:.75rem;color:#555">Historical sales data</div>
+    <div class="drop-name" id="name2"></div>
+    <input type="file" id="file2" accept=".csv" onchange="setFile('file2','name2','drop2')"/>
+  </div>
+</div>
+
+<button id="btn" onclick="run()" disabled>Analyze & Email Results</button>
+<div id="status">Upload both CSV files to begin</div>
+
+<script>
+const files = {file1: null, file2: null};
+
+function dv(e,el){e.preventDefault();el.classList.add('over')}
+function dl(el){el.classList.remove('over')}
+function df(e,fid,el,nid){
+  e.preventDefault();el.classList.remove('over');
+  const f=e.dataTransfer.files[0];
+  if(f){files[fid]=f;document.getElementById(nid).textContent=f.name;el.classList.add('has-file');checkReady()}
+}
+function setFile(fid,nid,did){
+  const f=document.getElementById(fid).files[0];
+  if(f){files[fid]=f;document.getElementById(nid).textContent=f.name;document.getElementById(did).classList.add('has-file');checkReady()}
+}
+function checkReady(){
+  const ok=files.file1&&files.file2;
+  document.getElementById('btn').disabled=!ok;
+  if(ok)setStatus('Ready — click Analyze to process','');
+}
+function setStatus(msg,cls){const el=document.getElementById('status');el.textContent=msg;el.className=cls||''}
+
+function parseCSV(text){
+  const lines=text.trim().split('\n');
+  const headers=lines[0].split(',').map(h=>h.replace(/"/g,'').trim().toLowerCase());
+  return lines.slice(1).filter(l=>l.trim()).map(l=>{
+    const vals=[];let cur='',inQ=false;
+    for(const c of l){if(c==='"'){inQ=!inQ}else if(c===','&&!inQ){vals.push(cur.trim());cur=''}else{cur+=c}}
+    vals.push(cur.trim());
+    const obj={};headers.forEach((h,i)=>obj[h]=vals[i]||'');
+    return obj;
+  });
+}
+
+function findCol(row,...names){
+  for(const n of names){const k=Object.keys(row).find(k=>k.includes(n));if(k)return k}
+  return null;
+}
+
+async function run(){
+  document.getElementById('btn').disabled=true;
+  setStatus('Reading files...','');
+
+  const [text1,text2]=await Promise.all([
+    files.file1.text(),
+    files.file2.text()
+  ]);
+
+  setStatus('Parsing CSV data...','');
+  const setup=parseCSV(text1);
+  const sales=parseCSV(text2);
+
+  // Find column names flexibly
+  const sampleSetup=setup[0]||{};
+  const sampleSales=sales[0]||{};
+
+  const idColSetup=findCol(sampleSetup,'item id','invoice item id','itemid','item_id','id');
+  const descColSetup=findCol(sampleSetup,'description','desc','name','item description');
+  const priceColSetup=findCol(sampleSetup,'price','unit price','sales price','fee');
+
+  const idColSales=findCol(sampleSales,'item id','invoice item id','itemid','item_id');
+  const dateColSales=findCol(sampleSales,'date sold','date','invoice date','sold date');
+  const qtyColSales=findCol(sampleSales,'qty sold','quantity','qty','units');
+  const totalColSales=findCol(sampleSales,'total invoice price','total price','amount','gross','total sales','revenue');
+
+  if(!idColSetup||!priceColSetup){setStatus('Could not find required columns in Invoice Item Setup CSV. Check the file format.','error');document.getElementById('btn').disabled=false;return}
+  if(!idColSales||!dateColSales){setStatus('Could not find required columns in Invoice Item Sales CSV. Check the file format.','error');document.getElementById('btn').disabled=false;return}
+
+  setStatus('Analyzing price history...','');
+
+  // Build sales index
+  const salesByItem={};
+  const today=new Date();
+  const cutoff365=new Date(today-365*24*60*60*1000);
+
+  sales.forEach(row=>{
+    const id=(row[idColSales]||'').trim();
+    if(!id)return;
+    if(!salesByItem[id])salesByItem[id]=[];
+    salesByItem[id].push(row);
+  });
+
+  const results=[];
+
+  setup.forEach(row=>{
+    const id=(row[idColSetup]||'').trim();
+    const desc=(row[descColSetup]||'').trim();
+    const currentPrice=parseFloat((row[priceColSetup]||'0').replace(/[$,]/g,''));
+    if(!id||isNaN(currentPrice)||currentPrice<=0)return;
+
+    const itemSales=salesByItem[id]||[];
+
+    // Usage last 365 days
+    let usage365=0,revenue365=0;
+    itemSales.forEach(s=>{
+      const d=new Date(s[dateColSales]);
+      if(d>=cutoff365){
+        usage365+=parseFloat(s[qtyColSales||'qty sold']||1);
+        revenue365+=parseFloat((s[totalColSales]||'0').replace(/[$,]/g,''));
+      }
+    });
+
+    // Infer last price change date
+    let lastChangeDate=null;
+    if(itemSales.length>0&&qtyColSales&&totalColSales){
+      const sorted=[...itemSales].sort((a,b)=>new Date(a[dateColSales])-new Date(b[dateColSales]));
+      for(const s of sorted){
+        const qty=parseFloat(s[qtyColSales]||1);
+        const total=parseFloat((s[totalColSales]||'0').replace(/[$,]/g,''));
+        if(qty>0){
+          const unitPrice=total/qty;
+          if(Math.abs(unitPrice-currentPrice)<0.02){
+            lastChangeDate=new Date(s[dateColSales]);
+            break;
+          }
+        }
+      }
+    }
+
+    // Inflation calc
+    const yearsSince=lastChangeDate?(today-lastChangeDate)/(365*24*60*60*1000):5;
+    let pct=0;
+    if(yearsSince>=5)pct=15;
+    else if(yearsSince>=3)pct=9;
+    else if(yearsSince>=2)pct=6;
+
+    const recommendedPrice=currentPrice*(1+pct/100);
+    const annualUplift=(recommendedPrice-currentPrice)*usage365;
+
+    results.push({id,desc,currentPrice,recommendedPrice,pct,lastChangeDate,yearsSince,usage365,revenue365,annualUplift});
+  });
+
+  // Sort by uplift
+  results.sort((a,b)=>b.annualUplift-a.annualUplift);
+
+  const needsUpdate=results.filter(r=>r.pct>0);
+  const totalUplift=needsUpdate.reduce((s,r)=>s+r.annualUplift,0);
+  const top10=needsUpdate.slice(0,10);
+
+  setStatus('Building email...','');
+
+  // Build email text
+  const dateStr=today.toLocaleDateString('en-CA');
+  let emailText=`Clinic IQ — Price Analysis Complete\nDate: ${dateStr}\n\n`;
+  emailText+=`SUMMARY\n`;
+  emailText+=`Items analyzed: ${results.length}\n`;
+  emailText+=`Items needing price update: ${needsUpdate.length}\n`;
+  emailText+=`Estimated annual revenue uplift: $${totalUplift.toLocaleString('en',{minimumFractionDigits:0,maximumFractionDigits:0})}\n\n`;
+  emailText+=`TOP 10 ITEMS BY UPLIFT\n`;
+  top10.forEach((r,i)=>{
+    const lastChanged=r.lastChangeDate?r.lastChangeDate.toLocaleDateString('en-CA'):'Unknown';
+    emailText+=`${i+1}. ${r.desc}\n`;
+    emailText+=`   Current: $${r.currentPrice.toFixed(2)} → Recommended: $${r.recommendedPrice.toFixed(2)} (+${r.pct}%)\n`;
+    emailText+=`   Uplift: $${r.annualUplift.toFixed(0)}/yr | Used ${Math.round(r.usage365)}x/yr | Last changed: ~${lastChanged}\n\n`;
+  });
+  emailText+=`Full breakdown attached as CSV.`;
+
+  // Build CSV attachment
+  let csv='Item ID,Description,Current Price,Recommended Price,Increase %,Last Changed (est),Uses/yr,Revenue/yr,Annual Uplift\n';
+  results.forEach(r=>{
+    const lc=r.lastChangeDate?r.lastChangeDate.toLocaleDateString('en-CA'):'Unknown';
+    csv+=`"${r.id}","${r.desc}","$${r.currentPrice.toFixed(2)}","$${r.recommendedPrice.toFixed(2)}","${r.pct}%","${lc}","${Math.round(r.usage365)}","$${r.revenue365.toFixed(0)}","$${r.annualUplift.toFixed(0)}"\n`;
+  });
+
+  const csvB64=btoa(unescape(encodeURIComponent(csv)));
+
+  setStatus('Sending email...','');
+
+  try{
+    const resp=await fetch('https://api.agentmail.to/v0/inboxes/jack@wildroseautomations.ca/messages/send',{
+      method:'POST',
+      headers:{
+        'Authorization':'Bearer am_us_eb590201635e5a67541a0e4c6eb32c5d6b144eb5cf48a5ca7ce9bece7940c11f',
+        'Content-Type':'application/json'
+      },
+      body:JSON.stringify({
+        to:['wildejack1010@gmail.com'],
+        subject:`Clinic IQ Price Analysis — $${Math.round(totalUplift).toLocaleString()} uplift identified`,
+        text:emailText,
+        attachments:[{filename:'clinic-iq-analysis.csv',content_type:'text/csv',data:csvB64}]
+      })
+    });
+
+    if(resp.ok){
+      setStatus(`✅ Done! Email sent to wildejack1010@gmail.com — $${totalUplift.toLocaleString('en',{minimumFractionDigits:0,maximumFractionDigits:0})} annual uplift found across ${needsUpdate.length} items.`,'success');
+    }else{
+      const err=await resp.json();
+      setStatus(`Analysis complete but email failed: ${err.message||resp.status}. Check console for CSV data.`,'error');
+      console.log('CSV DATA:\n'+csv);
+    }
+  }catch(e){
+    setStatus('Analysis complete but could not send email (network error). CSV logged to console.','error');
+    console.log('CSV DATA:\n'+csv);
+    console.log('EMAIL:\n'+emailText);
+  }
+
+  document.getElementById('btn').disabled=false;
+}
+</script>
+</body>
+</html>
