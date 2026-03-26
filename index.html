@@ -124,18 +124,19 @@ async function run(){
   setStatus('Uploading CSV files...','loading');
 
   try{
-    // Send as multipart form data so n8n receives actual binary files
-    const form=new FormData();
-    form.append('clinic_name',clinic);
-    form.append('email',email);
-    form.append('setup_csv',files.f1,files.f1.name);
-    form.append('sales_csv',files.f2,files.f2.name);
-
+    setStatus('Reading CSV files...','loading');
+    const [setupText,salesText]=await Promise.all([files.f1.text(),files.f2.text()]);
     setStatus('Analyzing...','loading');
 
     const resp=await fetch(N8N,{
       method:'POST',
-      body:form
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        clinic_name:clinic,
+        email:email,
+        setup_csv:setupText,
+        sales_csv:salesText
+      })
     });
 
     if(!resp.ok){
