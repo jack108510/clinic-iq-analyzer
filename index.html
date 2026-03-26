@@ -14,12 +14,10 @@ body{background:#05050a;color:#f0f0f8;font-family:-apple-system,BlinkMacSystemFo
 .logo-text{font-size:1.5rem;font-weight:800}
 .logo-text span{color:#d4a843}
 .subtitle{font-size:.95rem;color:#555}
-
 .field-row{margin-bottom:16px}
 .label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#555;margin-bottom:6px}
 .input{width:100%;background:#0d0d14;border:1px solid #1c1c2e;color:#f0f0f8;padding:12px 16px;border-radius:10px;font-size:.9rem;outline:none;transition:border-color .2s}
 .input:focus{border-color:#d4a843}
-
 .drop{border:2px dashed #1c1c2e;border-radius:14px;padding:40px 20px;text-align:center;cursor:pointer;transition:all .2s;background:#0d0d14;margin-bottom:16px}
 .drop:hover{border-color:#2a2a3e}
 .drop.over{border-color:#d4a843;background:rgba(212,168,67,.05)}
@@ -30,52 +28,15 @@ body{background:#05050a;color:#f0f0f8;font-family:-apple-system,BlinkMacSystemFo
 .drop-hint{font-size:.75rem;color:#444;margin-bottom:8px}
 .drop-name{font-size:.8rem;color:#d4a843;margin-top:8px;word-break:break-all}
 input[type=file]{display:none}
-
 .btn{width:100%;background:linear-gradient(135deg,#d4a843,#f0c060);color:#000;border:none;padding:15px;border-radius:12px;font-size:1rem;font-weight:800;cursor:pointer;transition:all .2s;letter-spacing:.3px;margin-bottom:16px}
 .btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 4px 20px rgba(212,168,67,.3)}
 .btn:disabled{background:#1c1c2e;color:#444;cursor:not-allowed;transform:none;box-shadow:none}
-
 .status-box{padding:14px 16px;border-radius:10px;font-size:.85rem;text-align:center;background:#0d0d14;border:1px solid #1c1c2e;color:#666;min-height:48px;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:16px}
 .status-box.loading{color:#d4a843;border-color:rgba(212,168,67,.3)}
 .status-box.success{color:#22c55e;border-color:rgba(34,197,94,.3);background:rgba(34,197,94,.05)}
 .status-box.error{color:#ef4444;border-color:rgba(239,68,68,.3);background:rgba(239,68,68,.05)}
 .spinner{width:16px;height:16px;border:2px solid rgba(212,168,67,.2);border-top-color:#d4a843;border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0}
 @keyframes spin{to{transform:rotate(360deg)}}
-
-/* Results */
-#results{display:none;margin-top:24px}
-.results-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px}
-.results-title{font-size:1.1rem;font-weight:700}
-.stats-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
-.stat{background:#0d0d14;border:1px solid #1c1c2e;border-radius:8px;padding:12px 16px;flex:1;min-width:130px}
-.stat-val{font-size:22px;font-weight:700;color:#d4a843}
-.stat-label{font-size:11px;color:#666;text-transform:uppercase;letter-spacing:.05em;margin-top:2px}
-
-.filter-bar{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center}
-.filter-btn{background:#0d0d14;border:1px solid #1c1c2e;color:#666;padding:5px 14px;border-radius:20px;cursor:pointer;font-size:12px;transition:all .15s}
-.filter-btn:hover{border-color:#444;color:#aaa}
-.filter-btn.active{background:rgba(212,168,67,.15);border-color:#d4a843;color:#d4a843}
-.export-btn{background:#0d0d14;border:1px solid #1c1c2e;color:#888;padding:6px 14px;border-radius:8px;cursor:pointer;font-size:12px;margin-left:auto;transition:all .15s}
-.export-btn:hover{border-color:#d4a843;color:#d4a843}
-
-.table-wrap{overflow-x:auto;border-radius:10px;border:1px solid #1c1c2e}
-table{width:100%;border-collapse:collapse;font-size:13px}
-th{background:#0d0d14;padding:10px 12px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#555;border-bottom:1px solid #1c1c2e;white-space:nowrap}
-td{padding:10px 12px;border-bottom:1px solid #0d0d14;vertical-align:middle}
-tr:last-child td{border-bottom:none}
-tr:hover td{background:rgba(255,255,255,.02)}
-.name-cell strong{color:#f0f0f8;display:block;margin-bottom:2px}
-.name-cell small{color:#444;font-size:11px}
-.pill{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600}
-.pill-red{background:rgba(239,68,68,.15);color:#ef4444}
-.pill-amber{background:rgba(245,158,11,.15);color:#f59e0b}
-.pill-green{background:rgba(34,197,94,.15);color:#22c55e}
-.inf{color:#f59e0b}
-.sug{font-weight:700;color:#f0f0f8}
-.rec{color:#22c55e;font-weight:700}
-
-.note{margin-top:16px;padding:14px;background:#0d0d14;border:1px solid #1c1c2e;border-radius:8px;font-size:12px;color:#444;line-height:1.6}
-
 .step-list{margin-top:20px;display:flex;flex-direction:column;gap:8px}
 .step{display:flex;align-items:flex-start;gap:10px;font-size:.78rem;color:#444;padding:8px 12px;border-radius:8px;background:#0d0d14;border:1px solid #0d0d14}
 .step-num{width:22px;height:22px;border-radius:50%;background:#1c1c2e;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;flex-shrink:0;color:#666;margin-top:1px}
@@ -85,10 +46,10 @@ tr:hover td{background:rgba(255,255,255,.02)}
 <div class="container">
   <div class="header">
     <div class="logo">
-      <div class="logo-icon">🏥</div>
+      <div class="logo-icon">&#x1F3E5;</div>
       <div class="logo-text">Clinic <span>IQ</span></div>
     </div>
-    <div class="subtitle">Stale Price Detector — powered by Canadian CPI</div>
+    <div class="subtitle">Stale Price Detector &mdash; powered by Canadian CPI</div>
   </div>
 
   <div class="field-row">
@@ -96,126 +57,40 @@ tr:hover td{background:rgba(255,255,255,.02)}
     <input class="input" id="clinicName" placeholder="e.g. River Valley Veterinary Wellness Clinic"/>
   </div>
 
+  <div class="field-row">
+    <div class="label">Send Report To</div>
+    <input class="input" id="reportEmail" type="email" placeholder="clinic@email.com"/>
+  </div>
+
   <div class="drop" id="dropzone"
     onclick="document.getElementById('fileInput').click()"
     ondragover="dv(event)" ondragleave="dl()" ondrop="df(event)">
-    <div class="drop-icon">📂</div>
+    <div class="drop-icon">&#x1F4C2;</div>
     <div class="drop-title">Drop Price History CSV here</div>
-    <div class="drop-hint">Cornerstone: Reports → Invoice Item → Invoice Item Price Information → Save to File</div>
+    <div class="drop-hint">Cornerstone: Reports &rarr; Invoice Item &rarr; Invoice Item Price Information &rarr; Save to File</div>
     <div class="drop-name" id="fname"></div>
     <input type="file" id="fileInput" accept=".csv,.txt" onchange="loadFile(this)"/>
   </div>
 
-  <div class="field-row">
-    <div class="label">Filter — Item type to include</div>
-    <select class="input" id="filterType">
-      <option value="all">All items</option>
-      <option value="service" selected>Services only (no inventory/drugs)</option>
-    </select>
-  </div>
-
-  <button class="btn" id="btn" onclick="run()" disabled>Analyze Prices</button>
+  <button class="btn" id="btn" onclick="run()" disabled>Analyze &amp; Email Report</button>
   <div class="status-box" id="status">Upload the Price History CSV to begin</div>
 
-  <div id="results">
-    <div class="results-header">
-      <div class="results-title">📊 Price Review Results</div>
-    </div>
-    <div class="stats-row" id="stats-row"></div>
-    <div class="filter-bar">
-      <button class="filter-btn active" onclick="setAgeFilter('all',this)">All</button>
-      <button class="filter-btn" onclick="setAgeFilter('8',this)">8+ years 🔴</button>
-      <button class="filter-btn" onclick="setAgeFilter('4',this)">4–7 years 🟡</button>
-      <button class="filter-btn" onclick="setAgeFilter('1',this)">1–3 years 🟢</button>
-      <button class="export-btn" onclick="exportCSV()">⬇ Export CSV</button>
-    </div>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Item</th>
-            <th>Current $</th>
-            <th>Price Since</th>
-            <th>Age</th>
-            <th>Inflation</th>
-            <th>Suggested $</th>
-            <th>Difference</th>
-          </tr>
-        </thead>
-        <tbody id="results-body"></tbody>
-      </table>
-    </div>
-    <div class="note" id="results-note"></div>
-  </div>
-
   <div class="step-list">
-    <div class="step"><div class="step-num">1</div><span>In Cornerstone: <strong>Reports → Invoice Item → Invoice Item Price Information</strong> → set date range to all available → Save to File → CSV</span></div>
-    <div class="step"><div class="step-num">2</div><span>Drop the CSV above → each item's <strong>most recent price change date</strong> is used as the baseline</span></div>
-    <div class="step"><div class="step-num">3</div><span>Suggested price = current price × cumulative <strong>Canadian CPI inflation</strong> from last change to today</span></div>
+    <div class="step"><div class="step-num">1</div><span>In Cornerstone: <strong>Reports &rarr; Invoice Item &rarr; Invoice Item Price Information</strong> &rarr; set date range to all available &rarr; Save to File &rarr; CSV</span></div>
+    <div class="step"><div class="step-num">2</div><span>Drop the CSV above, enter clinic name &amp; email, click <strong>Analyze &amp; Email Report</strong></span></div>
+    <div class="step"><div class="step-num">3</div><span>n8n processes the file &mdash; uses each item&rsquo;s most recent price change date + Canadian CPI to calculate the inflation gap. Report emailed instantly.</span></div>
   </div>
 </div>
 
 <script>
-// ── Canadian CPI ─────────────────────────────────────────────────────────────
-const CPI = {2005:2.2,2006:2.0,2007:2.1,2008:2.4,2009:0.3,2010:1.8,2011:2.9,
-             2012:1.5,2013:0.9,2014:2.0,2015:1.1,2016:1.4,2017:1.6,2018:2.3,
-             2019:1.9,2020:0.7,2021:3.4,2022:6.8,2023:3.9,2024:2.7,2025:2.3};
-const CURRENT_YEAR = 2026;
-
-function cumInflation(fromYear) {
-  let m = 1.0;
-  for (let y = fromYear + 1; y <= CURRENT_YEAR; y++) m *= 1 + (CPI[y] || 0.02) / 100;
-  return m;
-}
-
-// ── Service detection: use unitmeas_desc column (most reliable) ──────────────
-// Services = [None] or blank unit. Inventory = ml, tablet, each, bottle, etc.
-const INV_UNITS = ['ml','mg','tablet','capsule','each','bottle','tube','bag','box',
-  'tub','jar','strip','vial','pack','sheet','roll','litre','liter','oz','lb','kg','g '];
-
-function isInventoryRow(row) {
-  const unit = (row['unitmeas_desc'] || row['unit of measure'] || row['unitmeas'] || '').trim().toLowerCase();
-  // If unit is [None], empty, or not a physical unit → it's a service
-  if (!unit || unit === '[none]' || unit === 'none') return false;
-  // If it has a real unit of measure → it's inventory/drug
-  return INV_UNITS.some(u => unit.startsWith(u)) || unit.length > 0;
-}
-
-// ── CSV parser (handles tab or comma delimited) ──────────────────────────────
-function parseCSV(text) {
-  const lines = text.replace(/\r/g, '').trim().split('\n').filter(l => l.trim());
-  if (lines.length < 2) return [];
-  // Detect delimiter
-  const delim = lines[0].includes('\t') ? '\t' : ',';
-  const headers = lines[0].split(delim).map(h => h.replace(/['"]/g,'').trim().toLowerCase());
-  return lines.slice(1).map(line => {
-    const vals = []; let cur = '', inQ = false;
-    for (const c of line) {
-      if (c === '"') { inQ = !inQ; }
-      else if (c === delim && !inQ) { vals.push(cur.trim()); cur = ''; }
-      else { cur += c; }
-    }
-    vals.push(cur.trim());
-    const obj = {};
-    headers.forEach((h, i) => obj[h] = (vals[i] || '').replace(/^["']|["']$/g,'').trim());
-    return obj;
-  });
-}
-
-// ── State ─────────────────────────────────────────────────────────────────────
+const N8N = 'http://localhost:5678/webhook/OmsvzDOE4T0PWFSc/webhook/clinic-iq-analyze';
 let fileText = null;
-let allResults = [];
-let ageFilterMin = 0;
 
-// ── Drop zone ─────────────────────────────────────────────────────────────────
 function dv(e) { e.preventDefault(); document.getElementById('dropzone').classList.add('over'); }
 function dl()  { document.getElementById('dropzone').classList.remove('over'); }
-function df(e) {
-  e.preventDefault(); dl();
-  const f = e.dataTransfer.files[0];
-  if (f) processFile(f);
-}
+function df(e) { e.preventDefault(); dl(); const f = e.dataTransfer.files[0]; if (f) processFile(f); }
 function loadFile(input) { if (input.files[0]) processFile(input.files[0]); }
+
 function processFile(f) {
   document.getElementById('fname').textContent = f.name;
   document.getElementById('dropzone').classList.add('has-file');
@@ -223,7 +98,7 @@ function processFile(f) {
   reader.onload = e => {
     fileText = e.target.result;
     document.getElementById('btn').disabled = false;
-    setStatus(`✓ Loaded: ${f.name} (${Math.round(f.size/1024)} KB)`, 'success');
+    setStatus('Loaded: ' + f.name + ' (' + Math.round(f.size / 1024) + ' KB) — ready to analyze', 'success');
   };
   reader.readAsText(f);
 }
@@ -231,146 +106,52 @@ function processFile(f) {
 function setStatus(msg, cls) {
   const el = document.getElementById('status');
   el.className = 'status-box ' + (cls || '');
-  el.innerHTML = cls === 'loading' ? `<div class="spinner"></div><span>${msg}</span>` : msg;
+  el.innerHTML = cls === 'loading' ? '<div class="spinner"></div><span>' + msg + '</span>' : msg;
 }
 
-// ── Main analysis ─────────────────────────────────────────────────────────────
-function run() {
+async function run() {
   if (!fileText) return;
-  setStatus('Analyzing…', 'loading');
+  const clinic = document.getElementById('clinicName').value.trim() || 'Unknown Clinic';
+  const email  = document.getElementById('reportEmail').value.trim() || 'wildejack1010@gmail.com';
+  document.getElementById('btn').disabled = true;
+  setStatus('Sending to n8n...', 'loading');
 
-  setTimeout(() => {
-    try {
-      const rows = parseCSV(fileText);
-      if (!rows.length) { setStatus('❌ Could not parse CSV — check the file format', 'error'); return; }
+  try {
+    const resp = await fetch(N8N, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        clinic_name: clinic,
+        email: email,
+        price_history_csv: fileText
+      })
+    });
 
-      const filterType = document.getElementById('filterType').value;
-
-      // Group by invoiceitemid — collect all price change dates
-      const byId = {};
-      for (const row of rows) {
-        const id   = (row['invoiceitemid'] || '').trim();
-        const desc = (row['description'] || row['invoicedescription'] || '').trim();
-        const dateStr = (row['mod_date'] || row['date'] || '').trim();
-        const priceStr = (row['quanitytunitprice'] || row['base price'] || row['baseprice'] || row['price'] || '0').trim();
-
-        if (!id || !dateStr) continue;
-        const price = parseFloat(priceStr);
-        if (isNaN(price) || price <= 0) continue;
-
-        let d;
-        try { d = new Date(dateStr); if (isNaN(d)) continue; } catch { continue; }
-
-        // Track whether ANY row for this item has a real unit (= inventory)
-        if (!byId[id]) byId[id] = { id, desc, rows: [], hasUnit: false };
-        if (isInventoryRow(row)) byId[id].hasUnit = true;
-        byId[id].rows.push({ price, date: d });
-      }
-
-      const results = [];
-      for (const [id, item] of Object.entries(byId)) {
-        if (filterType === 'service' && item.hasUnit) continue;
-
-        // Most recent row = last price change
-        const sorted = item.rows.sort((a, b) => b.date - a.date);
-        const currentPrice = sorted[0].price;  // price at last change
-        const currentDate  = sorted[0].date;   // date of last change
-
-        // Most recent row = last changed date & current price
-        const priceSetYear = currentDate.getFullYear();
-        const yearsSince = CURRENT_YEAR - priceSetYear;
-        if (yearsSince < 1) continue;
-
-        const mult = cumInflation(priceSetYear);
-        const inflationPct = Math.round((mult - 1) * 1000) / 10;
-        const suggested = Math.ceil(currentPrice * mult * 100) / 100;
-        const diff = Math.round((suggested - currentPrice) * 100) / 100;
-        if (diff <= 0) continue;
-
-        results.push({
-          id, desc: item.desc, currentPrice, priceSetDate: currentDate,
-          priceSetYear, yearsSince, inflationPct, suggested, diff
-        });
-      }
-
-      // Sort by years since change desc, then by inflation impact desc
-      results.sort((a, b) => b.yearsSince - a.yearsSince || b.diff - a.diff);
-      allResults = results;
-
-      setStatus(`✅ Analysis complete — ${results.length} items with stale prices`, 'success');
-      renderResults();
-    } catch(e) {
-      setStatus('❌ Error: ' + e.message, 'error');
-      console.error(e);
+    if (!resp.ok) {
+      const err = await resp.text();
+      throw new Error('Server error ' + resp.status + ': ' + err.slice(0, 200));
     }
-  }, 50);
-}
 
-function setAgeFilter(min, btn) {
-  ageFilterMin = parseInt(min) || 0;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderResults();
-}
+    const result = await resp.json();
 
-function renderResults() {
-  const clinic = document.getElementById('clinicName').value.trim() || 'Clinic';
-  let rows = allResults;
-  if (ageFilterMin > 0) rows = rows.filter(r => r.yearsSince >= ageFilterMin && (ageFilterMin < 8 ? r.yearsSince < ageFilterMin + 4 : true));
-
-  // Stats
-  const r8 = allResults.filter(r => r.yearsSince >= 8).length;
-  const r4 = allResults.filter(r => r.yearsSince >= 4 && r.yearsSince < 8).length;
-  const r1 = allResults.filter(r => r.yearsSince >= 1 && r.yearsSince < 4).length;
-
-  document.getElementById('stats-row').innerHTML = `
-    <div class="stat"><div class="stat-val">${allResults.length}</div><div class="stat-label">Items to Review</div></div>
-    <div class="stat"><div class="stat-val" style="color:#ef4444">${r8}</div><div class="stat-label">🔴 8+ Years</div></div>
-    <div class="stat"><div class="stat-val" style="color:#f59e0b">${r4}</div><div class="stat-label">🟡 4–7 Years</div></div>
-    <div class="stat"><div class="stat-val" style="color:#22c55e">${r1}</div><div class="stat-label">🟢 1–3 Years</div></div>`;
-
-  const tbody = document.getElementById('results-body');
-  if (!rows.length) {
-    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:#444;padding:24px">No items match this filter</td></tr>`;
-  } else {
-    tbody.innerHTML = rows.map(r => {
-      const pillCls = r.yearsSince >= 8 ? 'pill-red' : r.yearsSince >= 4 ? 'pill-amber' : 'pill-green';
-      const dateStr = r.priceSetDate.toLocaleDateString('en-CA');
-      return `<tr>
-        <td class="name-cell"><strong>${esc(r.desc)}</strong><small>${esc(r.id)}</small></td>
-        <td>$${r.currentPrice.toFixed(2)}</td>
-        <td style="color:#555;font-size:12px">${dateStr}</td>
-        <td><span class="pill ${pillCls}">${r.yearsSince}yr</span></td>
-        <td class="inf">+${r.inflationPct}%</td>
-        <td class="sug">$${r.suggested.toFixed(2)}</td>
-        <td class="rec">+$${r.diff.toFixed(2)}</td>
-      </tr>`;
-    }).join('');
+    if (result.error) {
+      setStatus('&#x274C; ' + result.error, 'error');
+    } else if (result.success) {
+      setStatus(
+        '&#x2705; Done! <strong>' + result.stale_count + ' services</strong> flagged for price review &mdash; ' +
+        '&#x1F534; ' + result.red + ' &nbsp;&#x1F7E1; ' + result.amber + ' &nbsp;&#x1F7E2; ' + result.green +
+        ' &nbsp;&middot; Report sent to <strong>' + email + '</strong>',
+        'success'
+      );
+    } else {
+      setStatus('Response: ' + JSON.stringify(result).slice(0, 120), '');
+    }
+  } catch(e) {
+    setStatus('&#x274C; ' + e.message, 'error');
+    console.error(e);
   }
 
-  document.getElementById('results-note').innerHTML =
-    `<strong>Methodology:</strong> "Price Since" = oldest record with the current price (±2% tolerance). ` +
-    `Suggested price = current × cumulative Canadian CPI inflation from that year to ${CURRENT_YEAR}. ` +
-    `Source: Statistics Canada. Red = 8+ years unchanged · Amber = 4–7 years · Green = 1–3 years.`;
-
-  document.getElementById('results').style.display = 'block';
-  document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-
-function exportCSV() {
-  const rows = ageFilterMin > 0 ? allResults.filter(r => r.yearsSince >= ageFilterMin) : allResults;
-  let csv = 'Item ID,Description,Current Price,Price Since,Years Unchanged,Inflation %,Suggested Price,Difference\n';
-  for (const r of rows) {
-    csv += `"${r.id}","${r.desc}","$${r.currentPrice.toFixed(2)}","${r.priceSetDate.toLocaleDateString('en-CA')}","${r.yearsSince}","${r.inflationPct}%","$${r.suggested.toFixed(2)}","$${r.diff.toFixed(2)}"\n`;
-  }
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
-  a.download = `clinic-iq-price-review-${new Date().toISOString().slice(0,10)}.csv`;
-  a.click();
-}
-
-function esc(s) {
-  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  document.getElementById('btn').disabled = false;
 }
 </script>
 </body>
