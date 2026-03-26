@@ -163,11 +163,30 @@ async function run() {
       return [lines[0], ...Object.values(best).map(r => r.line)].join('\n');
     }
 
+    // Also trim item list to active services only
+    function trimItemList(csv) {
+      const lines = csv.replace(/\r/g, '').trim().split('\n').filter(l => l.trim());
+      if (lines.length < 2) return csv;
+      const delim = lines[0].includes('\t') ? '\t' : ',';
+      const headers = lines[0].split(delim).map(h => h.replace(/['"]/g,'').trim().toLowerCase());
+      const typeIdx   = headers.findIndex(h => h === 'type' || h === 'itemtype');
+      const statusIdx = headers.findIndex(h => h.includes('item status') || h === 'status');
+      if (typeIdx === -1 || statusIdx === -1) return csv;
+      const kept = lines.slice(1).filter(line => {
+        const cols = line.split(delim);
+        const type   = (cols[typeIdx]   || '').replace(/['"]/g,'').trim().toUpperCase();
+        const status = (cols[statusIdx] || '').replace(/['"]/g,'').trim().toLowerCase();
+        return type === 'S' && status.includes('active') && !status.includes('inactive');
+      });
+      return [lines[0], ...kept].join('\n');
+    }
+
     const trimmedPriceHistory = trimPriceHistory(files[2]);
+    const trimmedItemList = trimItemList(files[1]);
     const payload = JSON.stringify({
       clinic_name: clinic,
       email: email,
-      item_list_csv: files[1],
+      item_list_csv: trimmedItemList,
       price_history_csv: trimmedPriceHistory
     });
 
@@ -176,7 +195,7 @@ async function run() {
 
     const resp = await fetch(N8N, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'CF-Access-Client-Id': 'bypass' },
       body: payload
     });
 
