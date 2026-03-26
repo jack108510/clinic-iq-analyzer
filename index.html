@@ -101,7 +101,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:rgba(255,255,255,.015
     </div>
   </div>
 
-  <button class="btn" id="btn" onclick="run()" disabled>Analyze &amp; Email Report</button>
+  <button class="btn" id="btn" onclick="run()" disabled>Analyze Prices</button>
   <div class="status-box" id="status">Upload both CSV files to begin</div>
 
   <div id="results">
@@ -131,7 +131,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:rgba(255,255,255,.015
   <div class="steps">
     <div class="step"><div class="sn">1</div><span><strong>Invoice Item List:</strong> Reports &rarr; Invoice Item &rarr; Invoice Item List &rarr; Type=Service, Status=Active &rarr; Save to File</span></div>
     <div class="step"><div class="sn">2</div><span><strong>Price History:</strong> Reports &rarr; Invoice Item &rarr; Invoice Item Price Information &rarr; all dates &rarr; Save to File</span></div>
-    <div class="step"><div class="sn">3</div><span>Drop both files, click <strong>Analyze</strong> &mdash; runs entirely in your browser, emails the report instantly</span></div>
+    <div class="step"><div class="sn">3</div><span>Drop both files, click <strong>Analyze Prices</strong> &mdash; runs entirely in your browser, no data leaves your computer</span></div>
   </div>
 </div>
 
@@ -144,18 +144,27 @@ const CURRENT_YEAR = 2026;
 function cumInf(y){let m=1;for(let yr=y+1;yr<=CURRENT_YEAR;yr++)m*=1+(CPI[yr]||0.02)/100;return m;}
 
 // ── CSV parser ────────────────────────────────────────────────────────────────
+function splitCSVLine(line,d){
+  const v=[];let c='',q=false;
+  for(const ch of line){if(ch==='"'){q=!q;}else if(ch===d&&!q){v.push(c.trim());c='';}else{c+=ch;}}
+  v.push(c.trim());
+  return v.map(s=>s.replace(/^["']|["']$/g,'').trim());
+}
 function parseCSV(text){
   const lines=text.replace(/\r/g,'').trim().split('\n').filter(l=>l.trim());
   if(lines.length<2)return[];
   const d=lines[0].includes('\t')?'\t':',';
-  const hdr=lines[0].split(d).map(h=>h.replace(/['"]/g,'').trim().toLowerCase());
+  const hdr=splitCSVLine(lines[0],d).map(h=>h.toLowerCase());
   return lines.slice(1).map(line=>{
-    const v=[];let c='',q=false;
-    for(const ch of line){if(ch==='"'){q=!q;}else if(ch===d&&!q){v.push(c.trim());c='';}else{c+=ch;}}
-    v.push(c.trim());
-    const o={};hdr.forEach((h,i)=>o[h]=(v[i]||'').replace(/^["']|["']$/g,'').trim());
+    const v=splitCSVLine(line,d);
+    const o={};hdr.forEach((h,i)=>o[h]=(v[i]||''));
+    o._cols=v;o._hdr=hdr;
     return o;
   });
+}
+function colByName(row,...names){
+  for(const name of names){const i=row._hdr.indexOf(name.toLowerCase());if(i>=0)return(row._cols[i]||'').trim();}
+  return '';
 }
 
 // ── State ─────────────────────────────────────────────────────────────────────
@@ -198,18 +207,18 @@ function run(){
       if(!histRows.length){setStatus('Could not parse Price History','error');document.getElementById('btn').disabled=false;return;}
 
       // Build active services map
+      // Cornerstone InvoiceItemSetup CSV column layout (0-indexed):
+      // 4=invoiceitemid, 5=description(item), 6=invoicedescription,
+      // 7=itemtype, 8=description(type), 10=quanitytunitprice, 14=status
       const services={};
       for(const row of itemRows){
-        // Flexible column matching for different Cornerstone export formats
-        const keys=Object.keys(row);
-        const get=(...names)=>{for(const n of names){const k=keys.find(k=>k.toLowerCase().replace(/[^a-z]/g,'').includes(n.replace(/[^a-z]/g,'')));if(k)return row[k]||'';}return '';};
-        const id=get('itemid','invoiceitemid','id').trim();
-        const type=get('type','itemtype').trim().toUpperCase();
-        const status=get('itemstatus','status').trim().toLowerCase();
-        const desc=get('itemiddescription','description','invoicedescription','desc').trim();
-        const price=parseFloat(get('pricinginfoiprice','baseprice','price','quanitytunitprice','unitprice')||0);
-        // Accept S type, active status; if status column missing assume active
-        const isActive=!status||status.includes('active')&&!status.includes('inactive');
+        const id=(row._cols[4]||'').trim();
+        const desc=(row._cols[5]||row._cols[6]||'').trim();
+        const type=(row._cols[7]||'').trim().toUpperCase();
+        const statusRaw=(row._cols[14]||'').trim();
+        const price=parseFloat(row._cols[10]||0);
+        // status: '1'=active, '0'=inactive (numeric in Cornerstone CSV)
+        const isActive=statusRaw==='1'||statusRaw.toLowerCase()==='active'||statusRaw==='';
         const isService=!type||type==='S';
         if(!id||!isService||!isActive||price<=0)continue;
         services[id]={id,desc,price};
@@ -218,8 +227,8 @@ function run(){
       // Build last-changed map from price history
       const lastChanged={};
       for(const row of histRows){
-        const id=(row['invoiceitemid']||row['item id']||'').trim();
-        const ds=(row['mod_date']||row['date']||'').trim();
+        const id=colByName(row,'invoiceitemid','item id','itemid').trim();
+        const ds=colByName(row,'mod_date','moddate','date','pricechangedate','changed').trim();
         if(!id||!ds)continue;
         const d=new Date(ds);
         if(isNaN(d))continue;
@@ -227,7 +236,7 @@ function run(){
       }
 
       const svcCount=Object.keys(services).length;
-      if(!svcCount){setStatus('0 active services found. Item list headers: '+Object.keys(itemRows[0]||{}).join(', ').slice(0,120),'error');document.getElementById('btn').disabled=false;return;}
+      if(!svcCount){const h=(itemRows[0]||{})._hdr||[];setStatus('0 active services found. Col[4]='+((itemRows[0]||{})._cols||[])[4]+' Col[7]='+((itemRows[0]||{})._cols||[])[7]+' Col[14]='+((itemRows[0]||{})._cols||[])[14],'error');document.getElementById('btn').disabled=false;return;}
       const today=new Date();
       const cutoff=new Date(today-minYrs*365*24*60*60*1000);
       const results=[];
