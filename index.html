@@ -136,11 +136,39 @@ async function run() {
   setStatus('Sending to n8n...', 'loading');
 
   try {
+    setStatus('Compressing data...', 'loading');
+
+    // Trim price history to only the most recent row per item ID
+    // This reduces a 20MB file to ~50KB
+    function trimPriceHistory(csv) {
+      const lines = csv.replace(/\r/g, '').trim().split('\n').filter(l => l.trim());
+      if (lines.length < 2) return csv;
+      const delim = lines[0].includes('\t') ? '\t' : ',';
+      const headers = lines[0].split(delim).map(h => h.replace(/['"]/g,'').trim().toLowerCase());
+      const idIdx   = headers.findIndex(h => h.includes('invoiceitemid') || h === 'item id' || h === 'id');
+      const dateIdx = headers.findIndex(h => h.includes('mod_date') || h === 'date');
+      if (idIdx === -1 || dateIdx === -1) return csv; // can't parse, send as-is
+
+      const best = {}; // id -> { line, date }
+      for (let i = 1; i < lines.length; i++) {
+        const cols = lines[i].split(delim);
+        const id   = (cols[idIdx] || '').replace(/['"]/g,'').trim();
+        const dateStr = (cols[dateIdx] || '').replace(/['"]/g,'').trim();
+        if (!id || !dateStr) continue;
+        const d = new Date(dateStr);
+        if (isNaN(d)) continue;
+        if (!best[id] || d > best[id].date) best[id] = { line: lines[i], date: d };
+      }
+
+      return [lines[0], ...Object.values(best).map(r => r.line)].join('\n');
+    }
+
+    const trimmedPriceHistory = trimPriceHistory(files[2]);
     const payload = JSON.stringify({
       clinic_name: clinic,
       email: email,
       item_list_csv: files[1],
-      price_history_csv: files[2]
+      price_history_csv: trimmedPriceHistory
     });
 
     const sizeMB = (payload.length / 1024 / 1024).toFixed(1);
