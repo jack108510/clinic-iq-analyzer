@@ -150,8 +150,8 @@ tr:hover td{background:rgba(255,255,255,.02)}
 
   <div class="step-list">
     <div class="step"><div class="step-num">1</div><span>In Cornerstone: <strong>Reports → Invoice Item → Invoice Item Price Information</strong> → set date range to all available → Save to File → CSV</span></div>
-    <div class="step"><div class="step-num">2</div><span>Drop the CSV on the box above, choose filter type, click <strong>Analyze</strong></span></div>
-    <div class="step"><div class="step-num">3</div><span>Results show every item with stale pricing and the inflation-adjusted suggested price based on Canadian CPI</span></div>
+    <div class="step"><div class="step-num">2</div><span>Drop the CSV above → each item's <strong>most recent price change date</strong> is used as the baseline</span></div>
+    <div class="step"><div class="step-num">3</div><span>Suggested price = current price × cumulative <strong>Canadian CPI inflation</strong> from last change to today</span></div>
   </div>
 </div>
 
@@ -268,17 +268,13 @@ function run() {
       for (const [id, item] of Object.entries(byId)) {
         if (filterType === 'service' && looksLikeInventory(item.desc)) continue;
 
-        // Sort by date desc → most recent = current price
+        // Most recent row = last price change
         const sorted = item.rows.sort((a, b) => b.date - a.date);
-        const currentPrice = sorted[0].price;
-        const currentDate  = sorted[0].date;
+        const currentPrice = sorted[0].price;  // price at last change
+        const currentDate  = sorted[0].date;   // date of last change
 
-        // Find the oldest record with the same price (±2%) = when this price was set
-        const tol = Math.max(0.10, currentPrice * 0.02);
-        const samePrice = sorted.filter(r => Math.abs(r.price - currentPrice) <= tol);
-        const oldest = samePrice.reduce((min, r) => r.date < min.date ? r : min, samePrice[0]);
-
-        const priceSetYear = oldest.date.getFullYear();
+        // Most recent row = last changed date & current price
+        const priceSetYear = currentDate.getFullYear();
         const yearsSince = CURRENT_YEAR - priceSetYear;
         if (yearsSince < 1) continue;
 
@@ -289,9 +285,8 @@ function run() {
         if (diff <= 0) continue;
 
         results.push({
-          id, desc: item.desc, currentPrice, priceSetDate: oldest.date,
-          priceSetYear, yearsSince, inflationPct, suggested, diff,
-          lastSeen: currentDate
+          id, desc: item.desc, currentPrice, priceSetDate: currentDate,
+          priceSetYear, yearsSince, inflationPct, suggested, diff
         });
       }
 
