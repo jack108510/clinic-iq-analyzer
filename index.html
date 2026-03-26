@@ -86,6 +86,8 @@ input[type=file]{display:none}
 
   <div class="status-box" id="status">Upload both CSV files to begin</div>
 
+  <div id="debug-log" style="margin-top:12px;background:#0d0d14;border:1px solid #1c1c2e;border-radius:8px;padding:10px;font-size:.72rem;font-family:monospace;color:#666;white-space:pre-wrap;max-height:160px;overflow-y:auto;display:block;min-height:24px"></div>
+
   <div class="steps">
     <div class="step"><div class="step-num">1</div>Export Invoice Item Setup from Cornerstone: Reports → Invoice Item → Invoice Item Setup → Save as CSV</div>
     <div class="step"><div class="step-num">2</div>Export Invoice Item Sales: Reports → Invoice Item → Invoice Item Sales Information → set date range to last 5 years → Save as CSV</div>
@@ -117,44 +119,61 @@ function setStatus(msg,cls){
   el.innerHTML=cls==='loading'?`<div class="spinner"></div><span>${msg}</span>`:msg;
 }
 
+function log(msg){
+  const el=document.getElementById('debug-log');
+  if(el){el.textContent+='['+new Date().toLocaleTimeString()+'] '+msg+'\n'; el.scrollTop=el.scrollHeight;}
+  console.log('[ClinicIQ]',msg);
+}
+
 async function run(){
   const clinic=document.getElementById('clinicName').value.trim()||'Unknown Clinic';
   const email=document.getElementById('reportEmail').value.trim()||'wildejack1010@gmail.com';
   document.getElementById('btn').disabled=true;
-  setStatus('Uploading CSV files...','loading');
+  document.getElementById('debug-log').textContent='';
 
   try{
+    log('Reading files...');
+    log('File 1: '+(files.f1?files.f1.name+' ('+files.f1.size+' bytes)':'MISSING'));
+    log('File 2: '+(files.f2?files.f2.name+' ('+files.f2.size+' bytes)':'MISSING'));
+
+    if(!files.f1||!files.f2){setStatus('❌ Both files required','error');document.getElementById('btn').disabled=false;return;}
+
     setStatus('Reading CSV files...','loading');
     const [setupText,salesText]=await Promise.all([files.f1.text(),files.f2.text()]);
-    setStatus('Analyzing...','loading');
+    log('Setup CSV: '+setupText.split('\n').length+' rows, first line: '+setupText.split('\n')[0].slice(0,80));
+    log('Sales CSV: '+salesText.split('\n').length+' rows, first line: '+salesText.split('\n')[0].slice(0,80));
+
+    setStatus('Sending to analyzer...','loading');
+    const payload={clinic_name:clinic,email:email,setup_csv:setupText,sales_csv:salesText};
+    log('Sending to: '+N8N);
+    log('Payload size: '+JSON.stringify(payload).length+' bytes');
 
     const resp=await fetch(N8N,{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        clinic_name:clinic,
-        email:email,
-        setup_csv:setupText,
-        sales_csv:salesText
-      })
+      body:JSON.stringify(payload)
     });
+
+    log('Response status: '+resp.status);
 
     if(!resp.ok){
       const err=await resp.text();
+      log('Error body: '+err.slice(0,300));
       throw new Error(`Server error ${resp.status}: ${err.slice(0,200)}`);
     }
 
     const result=await resp.json();
+    log('Result: '+JSON.stringify(result).slice(0,200));
 
     if(result.error){
       setStatus('❌ '+result.error,'error');
     } else if(result.success){
-      const toEmail=document.getElementById('reportEmail').value.trim()||'wildejack1010@gmail.com';
-      setStatus(`✅ Done! ${result.active_stale||0} services flagged for review. Report sent to ${toEmail}`,'success');
+      setStatus(`✅ Done! ${result.active_stale||0} services flagged for review. Report sent to ${email}`,'success');
     } else {
-      setStatus('⚠️ Completed but email status unknown. Check your inbox.','');
+      setStatus('⚠️ Response: '+JSON.stringify(result).slice(0,100),'');
     }
   }catch(e){
+    log('EXCEPTION: '+e.message+' | '+e.stack);
     setStatus('❌ Error: '+e.message,'error');
   }
 
