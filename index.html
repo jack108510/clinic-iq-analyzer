@@ -347,10 +347,12 @@ function run(){
       allResults=results;
 
       if(hasSales&&salesMatchCount<10){
-        const salesHdrs=((salesRows[0]||{})._hdr||[]).join(', ').slice(0,200);
-        const sampleId=Object.keys(salesQty)[0]||Object.keys(salesRev)[0]||'none';
-        const sampleSvcId=Object.keys(services)[0]||'none';
-        setStatus('Done — '+results.length+' flagged. ⚠️ Only '+salesMatchCount+' sales matches. Sales ID sample: "'+sampleId+'" vs Service ID sample: "'+sampleSvcId+'". Sales headers: '+salesHdrs,'success');
+        // Show first data row column by column so we can see exactly what's in the file
+        const r0=salesRows[0]||{};
+        const hdrs=(r0._hdr||[]);
+        const vals=(r0._cols||[]);
+        const dump=hdrs.map((h,i)=>i+':"'+h+'"='+'"'+(vals[i]||'')+('"')).join(' | ').slice(0,300);
+        setStatus('⚠️ Only '+salesMatchCount+' sales matches. First row: '+dump,'error');
       } else {
         setStatus('Done — '+results.length+' services flagged'+(hasSales?' ('+salesMatchCount+' items matched)':''),'success');
       }
