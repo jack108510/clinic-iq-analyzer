@@ -270,7 +270,7 @@ function run(){
       if(hasSales){
         for(const row of salesRows){
           // Cornerstone Service Revenue report: invid=item ID, qty=quantity, tot=total revenue
-          let id=col(row,'invid','invoice item id','invoiceitemid','item id','itemid').trim();
+          let id=col(row,'invid','invoice item id','invoiceitemid','item id','itemid').trim().toUpperCase();
           if(!id)continue;
           const qty=parseFloat(col(row,'qty','quantity','qty sold','qtysold')||0);
           const rev=parseFloat(col(row,'tot','total','sales revenue','salesrevenue','revenue','total sales')||0);
@@ -299,8 +299,9 @@ function run(){
       const results=[];
 
       for(const [id,svc] of Object.entries(services)){
-        // Never filter out services based on sales — show all stale items,
-        // just add lost revenue column where sales data exists
+        const uid=id.toUpperCase();
+        if(salesQty[id]===undefined&&salesQty[uid]!==undefined){salesQty[id]=salesQty[uid];}
+        if(salesRev[id]===undefined&&salesRev[uid]!==undefined){salesRev[id]=salesRev[uid];}
 
         const lc=lastChanged[id]||null;
         if(lc&&lc>=cutoff)continue;
