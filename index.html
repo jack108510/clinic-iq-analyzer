@@ -238,6 +238,7 @@ function run(){
       }
 
       const svcCount=Object.keys(services).length;
+      const matchedCount=Object.keys(services).filter(id=>lastChanged[id]).length;
       if(!svcCount){const h=(itemRows[0]||{})._hdr||[];setStatus('0 active services found. Col[4]='+((itemRows[0]||{})._cols||[])[4]+' Col[7]='+((itemRows[0]||{})._cols||[])[7]+' Col[14]='+((itemRows[0]||{})._cols||[])[14],'error');document.getElementById('btn').disabled=false;return;}
       const today=new Date();
       const cutoff=new Date(today-minYrs*365*24*60*60*1000);
@@ -266,7 +267,7 @@ function run(){
       });
       allResults=results;
 
-      setStatus('Done! '+results.length+' active services with stale prices.','success');
+      setStatus('Done! '+results.length+' stale. Services: '+svcCount+', history matches: '+matchedCount+', no record: '+(svcCount-matchedCount),'success');
       renderResults();
       document.getElementById('btn').disabled=false;
     }catch(e){
