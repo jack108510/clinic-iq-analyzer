@@ -131,7 +131,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:rgba(255,255,255,.015
       <button class="fbtn" onclick="setFilter('5',this)">5–7 yrs</button>
       <button class="fbtn" onclick="setFilter('2',this)">2–4 yrs</button>
       <button class="fbtn" onclick="setFilter('1',this)">1 yr</button>
-      <button class="fbtn" onclick="setFilter('0',this)">No record</button>
+
       <button class="ebtn" onclick="exportCSV()">↓ Export CSV</button>
     </div>
     <div class="table-wrap">
@@ -329,8 +329,10 @@ function run(){
             }
           }
         }
+        // Skip items with no price history record
+        if(!lc)continue;
         results.push({id,desc:svc.desc,price:svc.price,
-          lastChanged:lc?lc.toISOString().slice(0,10):'Never recorded',
+          lastChanged:lc.toISOString().slice(0,10),
           lcYear,yrs,inf,sug,diff:diff||null,
           qty:salesQty[id]||null,
           rev:salesRev[id]||null,
@@ -344,10 +346,13 @@ function run(){
       });
       allResults=results;
 
-      if(hasSales&&salesMatchCount===0){
-        setStatus('Done — '+results.length+' flagged. ⚠️ Sales file loaded but 0 items matched — check column names. Headers: '+((salesRows[0]||{})._hdr||[]).join(', ').slice(0,150),'success');
+      if(hasSales&&salesMatchCount<10){
+        const salesHdrs=((salesRows[0]||{})._hdr||[]).join(', ').slice(0,200);
+        const sampleId=Object.keys(salesQty)[0]||Object.keys(salesRev)[0]||'none';
+        const sampleSvcId=Object.keys(services)[0]||'none';
+        setStatus('Done — '+results.length+' flagged. ⚠️ Only '+salesMatchCount+' sales matches. Sales ID sample: "'+sampleId+'" vs Service ID sample: "'+sampleSvcId+'". Sales headers: '+salesHdrs,'success');
       } else {
-        setStatus('Done — '+results.length+' services flagged'+(hasSales?' ('+salesMatchCount+' items matched from sales file)':''),'success');
+        setStatus('Done — '+results.length+' services flagged'+(hasSales?' ('+salesMatchCount+' items matched)':''),'success');
       }
       renderResults();
       document.getElementById('btn').disabled=false;
@@ -378,7 +383,7 @@ function renderResults(){
     <div class="stat"><div class="sv" style="color:#ef4444">${r8}</div><div class="sl">8+ Years</div></div>
     <div class="stat"><div class="sv" style="color:#f59e0b">${r5}</div><div class="sl">5–7 Years</div></div>
     <div class="stat"><div class="sv" style="color:#22c55e">${r2+r1}</div><div class="sl">1–4 Years</div></div>
-    <div class="stat"><div class="sv" style="color:#a78bfa">${rn}</div><div class="sl">No Record</div></div>`;
+`;
 
   // Update table header
   document.getElementById('thead').innerHTML=`
