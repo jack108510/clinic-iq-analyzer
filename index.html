@@ -302,6 +302,8 @@ function run(){
         const uid=id.toUpperCase();
         if(salesQty[id]===undefined&&salesQty[uid]!==undefined){salesQty[id]=salesQty[uid];}
         if(salesRev[id]===undefined&&salesRev[uid]!==undefined){salesRev[id]=salesRev[uid];}
+        // If sales file loaded, skip items with no sales in the period
+        if(hasSales&&!(salesQty[id]>0)&&!(salesRev[id]>0))continue;
 
         const lc=lastChanged[id]||null;
         if(lc&&lc>=cutoff)continue;
