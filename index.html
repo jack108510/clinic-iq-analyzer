@@ -109,8 +109,8 @@ tr:last-child td{border-bottom:none}tr:hover td{background:rgba(255,255,255,.015
     <div class="drop optional" id="drop3" onclick="document.getElementById('f3').click()" ondragover="dv(event,this)" ondragleave="dl(this)" ondrop="dfn(event,'f3',this,'n3',3)">
       <div class="drop-badge" id="b3">Optional</div>
       <div class="drop-icon">&#x1F4CA;</div>
-      <div class="drop-title">Sales Report (Last 365 Days)</div>
-      <div class="drop-hint">Reports → Invoice Item → Invoice Item Sales → last 365 days → Save to File (CSV)<br/>Adds lost revenue column</div>
+      <div class="drop-title">Service Revenue Report</div>
+      <div class="drop-hint">Reports → Invoice Item → Service Revenue → last 365 days → Save to File (CSV)<br/>Adds lost revenue column</div>
       <div class="drop-name" id="n3"></div>
       <input type="file" id="f3" accept=".csv,.txt" onchange="loadFile('f3','n3','drop3','b3',3)"/>
     </div>
@@ -154,7 +154,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:rgba(255,255,255,.015
   <div class="steps">
     <div class="step"><div class="sn">1</div><span><strong>Invoice Item List:</strong> Reports → Invoice Item → Invoice Item List → Save to File</span></div>
     <div class="step"><div class="sn">2</div><span><strong>Price History:</strong> Reports → Invoice Item → Invoice Item Price Information → set date range to all dates → Save to File</span></div>
-    <div class="step"><div class="sn">3</div><span><strong>Sales Report (optional but powerful):</strong> Reports → Invoice Item → Invoice Item Sales → last 365 days → Save to File — unlocks the lost revenue column</span></div>
+    <div class="step"><div class="sn">3</div><span><strong>Service Revenue Report (optional but powerful):</strong> Reports → Invoice Item → Service Revenue → last 365 days → Save to File — unlocks the lost revenue column</span></div>
     <div class="step"><div class="sn">4</div><span>Drop the files above and click <strong>Analyze Prices</strong> — runs entirely in your browser, nothing leaves your computer</span></div>
   </div>
 </div>
@@ -262,15 +262,26 @@ function run(){
         if(!lastChanged[id]||d>lastChanged[id])lastChanged[id]=d;
       }
 
-      // ── Sales quantities from sales report (last 365 days) ──
-      // Key fields: Invoice Item ID, QTY Sold
+      // ── Sales quantities from service revenue report ──
+      // Supports both Invoice Item Sales (qty sold) and Service Revenue (quantity + sales revenue)
+      // Item ID may be standalone or combined with description as "1234 Some Description"
       const salesQty={};
+      const salesRev={};
       if(hasSales){
         for(const row of salesRows){
-          const id=col(row,'invoice item id','invoiceitemid','item id','itemid').trim();
-          const qty=parseFloat(col(row,'qty sold','qtysold','qty','quantity')||0);
-          if(!id||qty<=0)continue;
-          salesQty[id]=(salesQty[id]||0)+qty;
+          // Try standalone ID column first
+          let id=col(row,'invoice item id','invoiceitemid','item id','itemid').trim();
+          // Try extracting from "Item ID and Description" combined column
+          if(!id){
+            const combined=col(row,'item id and description','item id & description','item description','description').trim();
+            const m=combined.match(/^(\S+)\s/);
+            if(m)id=m[1];
+          }
+          if(!id)continue;
+          const qty=parseFloat(col(row,'quantity','qty sold','qtysold','qty')||0);
+          const rev=parseFloat(col(row,'sales revenue','salesrevenue','revenue','total sales','totalsales')||0);
+          if(qty>0)salesQty[id]=(salesQty[id]||0)+qty;
+          if(rev>0)salesRev[id]=(salesRev[id]||0)+rev;
         }
       }
 
@@ -283,7 +294,7 @@ function run(){
 
       for(const [id,svc] of Object.entries(services)){
         // Only include items that were sold in the last 365 days if sales file provided
-        if(hasSales&&!(salesQty[id]>0))continue;
+        if(hasSales&&!(salesQty[id]>0)&&!(salesRev[id]>0))continue;
 
         const lc=lastChanged[id]||null;
         if(lc&&lc>=cutoff)continue;
@@ -295,14 +306,23 @@ function run(){
           inf=Math.round((m-1)*1000)/10;
           sug=Math.ceil(svc.price*m*100)/100;
           diff=Math.round((sug-svc.price)*100)/100;
-          if(hasSales&&salesQty[id]>0){
-            lostRev=Math.round(diff*salesQty[id]*100)/100;
+          if(hasSales&&(salesQty[id]>0||salesRev[id]>0)){
+            // If we have actual qty, use qty × gap; otherwise estimate from revenue ratio
+            if(salesQty[id]>0){
+              lostRev=Math.round(diff*salesQty[id]*100)/100;
+            } else if(salesRev[id]>0){
+              // revenue / current price ≈ qty sold
+              const impliedQty=salesRev[id]/svc.price;
+              lostRev=Math.round(diff*impliedQty*100)/100;
+            }
           }
         }
         results.push({id,desc:svc.desc,price:svc.price,
           lastChanged:lc?lc.toISOString().slice(0,10):'Never recorded',
           lcYear,yrs,inf,sug,diff:diff||null,
-          qty:salesQty[id]||null,lostRev});
+          qty:salesQty[id]||null,
+          rev:salesRev[id]||null,
+          lostRev});
       }
 
       results.sort((a,b)=>{
@@ -353,7 +373,7 @@ function renderResults(){
     <th>Inflation</th>
     <th>Suggested $</th>
     <th>Per Unit Gap</th>
-    ${hasSales?'<th style="text-align:right">Qty Sold</th><th style="text-align:right;color:#22c55e">Lost Revenue</th>':''}`;
+    ${hasSales?'<th style="text-align:right">Qty / Revenue</th><th style="text-align:right;color:#22c55e">Lost Revenue</th>':''}`;
 
   document.getElementById('results').style.display='block';
   renderTable();
@@ -385,7 +405,7 @@ function renderTable(){
     <td style="color:#f59e0b">${r.inf!=null?'+'+r.inf+'%':'—'}</td>
     <td style="font-weight:700;color:#f0f0f8">${r.sug!=null?'$'+r.sug.toFixed(2):'—'}</td>
     <td style="color:#22c55e;font-weight:600">${r.diff!=null?'+$'+r.diff.toFixed(2):'—'}</td>
-    ${hasSales?`<td style="text-align:right;color:#666">${r.qty!=null?r.qty.toLocaleString():'—'}</td>
+    ${hasSales?`<td style="text-align:right;color:#666">${r.qty!=null?r.qty.toLocaleString()+'u':r.rev!=null?'$'+r.rev.toLocaleString('en-CA',{minimumFractionDigits:0,maximumFractionDigits:0}):'—'}</td>
     <td style="text-align:right" class="lost">${r.lostRev!=null?'+$'+r.lostRev.toLocaleString('en-CA',{minimumFractionDigits:2,maximumFractionDigits:2}):'—'}</td>`:''}
   </tr>`).join('');
 
