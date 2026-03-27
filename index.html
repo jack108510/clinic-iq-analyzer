@@ -269,17 +269,11 @@ function run(){
       const salesRev={};
       if(hasSales){
         for(const row of salesRows){
-          // Try standalone ID column first
-          let id=col(row,'invoice item id','invoiceitemid','item id','itemid').trim();
-          // Try extracting from "Item ID and Description" combined column
-          if(!id){
-            const combined=col(row,'item id and description','item id & description','item description','description').trim();
-            const m=combined.match(/^(\S+)\s/);
-            if(m)id=m[1];
-          }
+          // Cornerstone Service Revenue report: invid=item ID, qty=quantity, tot=total revenue
+          let id=col(row,'invid','invoice item id','invoiceitemid','item id','itemid').trim();
           if(!id)continue;
-          const qty=parseFloat(col(row,'quantity','qty sold','qtysold','qty')||0);
-          const rev=parseFloat(col(row,'sales revenue','salesrevenue','revenue','total sales','totalsales')||0);
+          const qty=parseFloat(col(row,'qty','quantity','qty sold','qtysold')||0);
+          const rev=parseFloat(col(row,'tot','total','sales revenue','salesrevenue','revenue','total sales')||0);
           if(qty>0)salesQty[id]=(salesQty[id]||0)+qty;
           if(rev>0)salesRev[id]=(salesRev[id]||0)+rev;
         }
