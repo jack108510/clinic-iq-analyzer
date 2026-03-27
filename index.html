@@ -294,7 +294,8 @@ function run(){
 
       for(const [id,svc] of Object.entries(services)){
         // Only include items that were sold in the last 365 days if sales file provided
-        if(hasSales&&!(salesQty[id]>0)&&!(salesRev[id]>0))continue;
+        const salesMatched=Object.keys(salesQty).length+Object.keys(salesRev).length>0;
+        if(hasSales&&salesMatched&&!(salesQty[id]>0)&&!(salesRev[id]>0))continue;
 
         const lc=lastChanged[id]||null;
         if(lc&&lc>=cutoff)continue;
@@ -332,7 +333,12 @@ function run(){
       });
       allResults=results;
 
-      setStatus('Done — '+results.length+' services flagged'+(hasSales?' (sold in last 365 days only)':''),'success');
+      const salesMatched=Object.keys(salesQty).length+Object.keys(salesRev).length;
+      if(hasSales&&salesMatched===0){
+        setStatus('Done — '+results.length+' flagged. ⚠️ Sales file loaded but 0 items matched — check column names. First row: '+Object.keys(salesRows[0]||{}).filter(k=>!k.startsWith('_')).join(', ').slice(0,120),'success');
+      } else {
+        setStatus('Done — '+results.length+' services flagged'+(hasSales?' ('+salesMatched+' items matched from sales file)':''),'success');
+      }
       renderResults();
       document.getElementById('btn').disabled=false;
     }catch(e){
