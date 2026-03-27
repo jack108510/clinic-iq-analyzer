@@ -305,8 +305,8 @@ function run(){
       const results=[];
 
       for(const [id,svc] of Object.entries(services)){
-        // Only filter by sales if the sales file actually matched something
-        if(hasSales&&salesMatchCount>0&&!(salesQty[id]>0)&&!(salesRev[id]>0))continue;
+        // Never filter out services based on sales — show all stale items,
+        // just add lost revenue column where sales data exists
 
         const lc=lastChanged[id]||null;
         if(lc&&lc>=cutoff)continue;
