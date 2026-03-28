@@ -229,7 +229,6 @@ function renderDetail(r) {
       <div class="summary-card"><div class="sv">${r.totalStale}</div><div class="sl">Stale Services</div></div>
       <div class="summary-card"><div class="sv red">${max8}</div><div class="sl">8+ Years Old</div></div>
       <div class="summary-card"><div class="sv">${maxDays > 0 ? Math.round(maxDays/365)+'yr' : '—'}</div><div class="sl">Longest Gap</div></div>
-      <div class="summary-card"><div class="sv green">${r.results.length > 0 && r.results[0].inf != null ? '+' + r.results[0].inf + '%' : '—'}</div><div class="sl">Max Inflation</div></div>
     </div>
 
     <div class="table-wrap">
