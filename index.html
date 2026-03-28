@@ -6,207 +6,433 @@
 <title>Vet Solutions — Smart Tools for Veterinary Clinics</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:#eef4ff;color:#1e3a5f;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;min-height:100vh}
+:root{
+  --blue:#2563eb;--blue-light:#60a5fa;--blue-dim:#eff6ff;--blue-border:#dbeafe;
+  --navy:#1e3a5f;--muted:#64748b;--bg:#f0f6ff;--white:#fff;
+  --purple:#7c3aed;--green:#16a34a;--red:#ef4444;--amber:#d97706;
+}
+body{background:var(--bg);color:var(--navy);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;min-height:100vh}
 
-/* NAV */
-nav{background:#fff;border-bottom:1px solid #dbeafe;padding:0 32px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+/* ── NAV ── */
+nav{background:var(--white);border-bottom:1px solid var(--blue-border);padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 1px 12px rgba(37,99,235,.06)}
 .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
-.nav-logo-icon{width:36px;height:36px;background:linear-gradient(135deg,#2563eb,#60a5fa);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px}
-.nav-logo-text{font-size:1.1rem;font-weight:800;color:#1e3a5f}.nav-logo-text span{color:#2563eb}
-.nav-links{display:flex;gap:6px}
-.nav-link{text-decoration:none;color:#64748b;font-size:.88rem;font-weight:500;padding:6px 14px;border-radius:7px;transition:all .15s}
-.nav-link:hover{background:#f0f6ff;color:#2563eb}
-.nav-link.active{color:#2563eb;background:#eff6ff}
+.nav-logo-icon{width:38px;height:38px;background:linear-gradient(135deg,var(--blue),var(--blue-light));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 2px 8px rgba(37,99,235,.25)}
+.nav-logo-text{font-size:1.15rem;font-weight:800;color:var(--navy)}.nav-logo-text span{color:var(--blue)}
+.nav-links{display:flex;gap:4px}
+.nav-link{text-decoration:none;color:var(--muted);font-size:.88rem;font-weight:500;padding:7px 15px;border-radius:8px;transition:all .15s}
+.nav-link:hover{background:var(--blue-dim);color:var(--blue)}
+.nav-cta{background:var(--blue);color:#fff!important;border-radius:8px}
+.nav-cta:hover{background:#1d4ed8!important;box-shadow:0 2px 10px rgba(37,99,235,.3)}
 
-/* HERO */
-.hero{text-align:center;padding:68px 20px 52px;max-width:700px;margin:0 auto}
-.hero-badge{display:inline-block;background:#dbeafe;color:#2563eb;font-size:.72rem;font-weight:700;padding:4px 12px;border-radius:20px;margin-bottom:18px;text-transform:uppercase;letter-spacing:.06em}
-.hero h1{font-size:2.5rem;font-weight:900;line-height:1.15;color:#1e3a5f;margin-bottom:14px}
-.hero h1 span{color:#2563eb}
-.hero p{font-size:1rem;color:#64748b;line-height:1.65;max-width:520px;margin:0 auto}
+/* ── HERO ── */
+.hero{position:relative;overflow:hidden;text-align:center;padding:88px 20px 72px;background:linear-gradient(180deg,var(--white) 0%,var(--bg) 100%);border-bottom:1px solid var(--blue-border)}
+.hero-glow{position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:600px;height:400px;background:radial-gradient(ellipse,rgba(37,99,235,.08) 0%,transparent 70%);pointer-events:none}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:var(--blue-dim);color:var(--blue);font-size:.72rem;font-weight:700;padding:5px 14px;border-radius:20px;margin-bottom:22px;border:1px solid var(--blue-border)}
+.hero h1{font-size:3rem;font-weight:900;line-height:1.1;color:var(--navy);margin-bottom:18px;max-width:640px;margin-left:auto;margin-right:auto}
+.hero h1 span{color:var(--blue);background:linear-gradient(135deg,var(--blue),var(--blue-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{font-size:1.05rem;color:var(--muted);line-height:1.7;max-width:560px;margin:0 auto 36px}
+.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn-primary{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,var(--blue),var(--blue-light));color:#fff;text-decoration:none;padding:13px 26px;border-radius:10px;font-size:.95rem;font-weight:700;transition:all .2s;box-shadow:0 4px 14px rgba(37,99,235,.25)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(37,99,235,.35)}
+.btn-ghost{display:inline-flex;align-items:center;gap:6px;background:var(--white);color:var(--navy);text-decoration:none;padding:13px 26px;border-radius:10px;font-size:.95rem;font-weight:600;transition:all .2s;border:1px solid var(--blue-border)}
+.btn-ghost:hover{border-color:var(--blue);color:var(--blue);transform:translateY(-2px)}
 
-/* TWO PILLARS */
-.pillars{max-width:1100px;margin:0 auto;padding:0 20px 72px;display:grid;grid-template-columns:1fr 1fr;gap:24px}
-@media(max-width:750px){.pillars{grid-template-columns:1fr}}
+/* ── SECTION WRAPPER ── */
+.section{max-width:1100px;margin:0 auto;padding:64px 24px}
+.section-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--blue);margin-bottom:10px}
+.section-title{font-size:1.75rem;font-weight:900;color:var(--navy);margin-bottom:10px}
+.section-sub{font-size:.92rem;color:var(--muted);line-height:1.65;max-width:560px}
 
-.pillar{background:#fff;border:1px solid #dbeafe;border-radius:16px;padding:28px;display:flex;flex-direction:column}
-.pillar-header{display:flex;align-items:center;gap:14px;margin-bottom:8px}
-.pillar-icon{width:50px;height:50px;border-radius:12px;background:linear-gradient(135deg,#2563eb,#60a5fa);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
-.pillar-icon.soft{background:linear-gradient(135deg,#7c3aed,#a78bfa)}
-.pillar-title{font-size:1.2rem;font-weight:800;color:#1e3a5f}
-.pillar-subtitle{font-size:.82rem;color:#64748b;margin-bottom:20px;line-height:1.5;padding-left:64px;margin-top:-4px}
-.pillar-divider{border:none;border-top:1px solid #dbeafe;margin-bottom:20px}
+/* ── PILLAR TABS ── */
+.tabs{display:flex;gap:8px;margin-bottom:28px;border-bottom:2px solid var(--blue-border);padding-bottom:0}
+.tab{padding:10px 20px;font-size:.9rem;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .15s;border-radius:0;background:none;border-left:none;border-right:none;border-top:none}
+.tab:hover{color:var(--navy)}
+.tab.active{color:var(--blue);border-bottom-color:var(--blue)}
+.tab-panel{display:none}.tab-panel.active{display:block}
 
-/* REPORT CARDS */
-.report-card{border:1px solid #dbeafe;border-radius:11px;padding:16px 18px;margin-bottom:12px;transition:all .2s;position:relative}
+/* ── REPORT CARDS ── */
+.reports-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+.report-card{background:var(--white);border:1px solid var(--blue-border);border-radius:14px;padding:22px;position:relative;transition:all .2s}
 .report-card.live{cursor:pointer}
-.report-card.live:hover{border-color:#2563eb;background:#f8faff;transform:translateX(3px)}
-.report-card.coming{opacity:.55}
-.rc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
-.rc-name{font-size:.9rem;font-weight:700;color:#1e3a5f}
-.rc-badge{font-size:.58rem;font-weight:700;padding:2px 7px;border-radius:5px;text-transform:uppercase;letter-spacing:.05em}
-.badge-live{background:rgba(34,197,94,.12);color:#16a34a}
-.badge-soon{background:#f0f6ff;color:#94a3b8}
-.rc-desc{font-size:.78rem;color:#64748b;line-height:1.5}
-.rc-link{display:inline-flex;align-items:center;gap:4px;margin-top:8px;color:#2563eb;font-size:.78rem;font-weight:600;text-decoration:none}
+.report-card.live:hover{border-color:var(--blue);box-shadow:0 4px 20px rgba(37,99,235,.1);transform:translateY(-2px)}
+.report-card.coming{opacity:.6}
+.rc-badge{position:absolute;top:16px;right:16px;font-size:.6rem;font-weight:700;padding:3px 8px;border-radius:6px;text-transform:uppercase;letter-spacing:.05em}
+.badge-live{background:rgba(22,163,74,.12);color:var(--green)}
+.badge-soon{background:var(--blue-dim);color:#94a3b8}
+.rc-icon{font-size:1.8rem;margin-bottom:12px}
+.rc-name{font-size:.98rem;font-weight:700;color:var(--navy);margin-bottom:6px;padding-right:60px}
+.rc-desc{font-size:.8rem;color:var(--muted);line-height:1.6}
+.rc-link{display:inline-flex;align-items:center;gap:5px;margin-top:14px;color:var(--blue);font-size:.8rem;font-weight:600;text-decoration:none}
 .rc-link:hover{text-decoration:underline}
 
-/* PMS GRID */
-.pms-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.pms-card{border:1px solid #dbeafe;border-radius:11px;padding:14px;text-align:center;position:relative}
-.pms-card.live{cursor:pointer;transition:all .2s}
-.pms-card.live:hover{border-color:#7c3aed;background:#faf5ff}
-.pms-card.coming{opacity:.5}
-.pms-logo{font-size:1.6rem;margin-bottom:6px}
-.pms-name{font-size:.82rem;font-weight:700;color:#1e3a5f}
-.pms-status{font-size:.65rem;color:#94a3b8;margin-top:3px}
-.pms-status.live-status{color:#16a34a;font-weight:600}
+/* ── PMS CARDS ── */
+.pms-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;margin-bottom:32px}
+.pms-card{background:var(--white);border:1px solid var(--blue-border);border-radius:12px;padding:20px;text-align:center;transition:all .2s}
+.pms-card.coming{opacity:.55}
+.pms-logo-wrap{width:48px;height:48px;border-radius:12px;background:var(--blue-dim);display:flex;align-items:center;justify-content:center;font-size:22px;margin:0 auto 10px}
+.pms-name{font-size:.88rem;font-weight:700;color:var(--navy)}
+.pms-status{font-size:.68rem;color:#94a3b8;margin-top:4px}
+.pms-status.live-s{color:var(--green);font-weight:600}
+.pms-cta{background:linear-gradient(135deg,rgba(124,58,237,.08),rgba(124,58,237,.04));border:1px solid rgba(124,58,237,.2);border-radius:12px;padding:24px;text-align:center}
+.pms-cta h3{font-size:1rem;font-weight:700;color:#6d28d9;margin-bottom:8px}
+.pms-cta p{font-size:.82rem;color:var(--muted);line-height:1.6;margin-bottom:16px}
+.btn-purple{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,var(--purple),#a78bfa);color:#fff;text-decoration:none;padding:10px 20px;border-radius:9px;font-size:.85rem;font-weight:700;transition:all .2s;cursor:pointer;border:none}
+.btn-purple:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(124,58,237,.3)}
 
-/* FOOTER */
-footer{background:#fff;border-top:1px solid #dbeafe;padding:24px 32px;text-align:center;font-size:.8rem;color:#94a3b8}
-footer a{color:#2563eb;text-decoration:none}footer a:hover{text-decoration:underline}
+/* ── HOW IT WORKS ── */
+.how-section{background:var(--white);border-top:1px solid var(--blue-border);border-bottom:1px solid var(--blue-border)}
+.steps-row{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;margin-top:40px}
+@media(max-width:650px){.steps-row{grid-template-columns:1fr}}
+.step-item{text-align:center}
+.step-num{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--blue-light));color:#fff;font-size:1.1rem;font-weight:900;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;box-shadow:0 2px 10px rgba(37,99,235,.25)}
+.step-title{font-size:.95rem;font-weight:700;color:var(--navy);margin-bottom:6px}
+.step-desc{font-size:.82rem;color:var(--muted);line-height:1.6}
+
+/* ── CONTACT ── */
+.contact-wrap{display:grid;grid-template-columns:1fr 1.2fr;gap:40px;align-items:start}
+@media(max-width:750px){.contact-wrap{grid-template-columns:1fr}}
+.contact-info h2{font-size:1.6rem;font-weight:900;color:var(--navy);margin-bottom:12px}
+.contact-info p{font-size:.9rem;color:var(--muted);line-height:1.7;margin-bottom:24px}
+.contact-detail{display:flex;align-items:center;gap:10px;margin-bottom:14px;font-size:.88rem;color:var(--muted)}
+.contact-detail-icon{width:36px;height:36px;background:var(--blue-dim);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.contact-form{background:var(--white);border:1px solid var(--blue-border);border-radius:16px;padding:32px;box-shadow:0 4px 24px rgba(37,99,235,.06)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:500px){.form-row{grid-template-columns:1fr}}
+.form-group{margin-bottom:16px}
+.form-label{display:block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:6px}
+.form-input{width:100%;background:#f8faff;border:1px solid var(--blue-border);color:var(--navy);padding:11px 14px;border-radius:9px;font-size:.88rem;outline:none;transition:border-color .2s;font-family:inherit}
+.form-input:focus{border-color:var(--blue);background:var(--white);box-shadow:0 0 0 3px rgba(37,99,235,.08)}
+textarea.form-input{min-height:110px;resize:vertical}
+select.form-input{cursor:pointer}
+.btn-submit{width:100%;background:linear-gradient(135deg,var(--blue),var(--blue-light));color:#fff;border:none;padding:13px;border-radius:10px;font-size:.95rem;font-weight:700;cursor:pointer;transition:all .2s;font-family:inherit}
+.btn-submit:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(37,99,235,.3)}
+.btn-submit:disabled{background:var(--blue-border);color:#94a3b8;cursor:not-allowed;transform:none;box-shadow:none}
+.form-status{margin-top:12px;padding:10px 14px;border-radius:8px;font-size:.83rem;text-align:center;display:none}
+.form-status.success{display:block;background:rgba(22,163,74,.08);border:1px solid rgba(22,163,74,.2);color:var(--green)}
+.form-status.error{display:block;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);color:var(--red)}
+
+/* ── FOOTER ── */
+footer{background:var(--navy);color:rgba(255,255,255,.6);padding:32px 40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.footer-logo{display:flex;align-items:center;gap:8px;text-decoration:none}
+.footer-logo-icon{width:30px;height:30px;background:linear-gradient(135deg,var(--blue),var(--blue-light));border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px}
+.footer-logo-text{font-size:.95rem;font-weight:700;color:#fff}
+.footer-logo-text span{color:var(--blue-light)}
+.footer-links{display:flex;gap:20px;font-size:.82rem}
+.footer-links a{color:rgba(255,255,255,.5);text-decoration:none;transition:color .15s}
+.footer-links a:hover{color:#fff}
+.footer-copy{font-size:.78rem;color:rgba(255,255,255,.35);width:100%}
+
+@media(max-width:600px){
+  .hero h1{font-size:2rem}
+  nav{padding:0 16px}
+  footer{padding:24px 20px}
+  .steps-row{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
 
+<!-- NAV -->
 <nav>
   <a class="nav-logo" href="index.html">
     <div class="nav-logo-icon">🏥</div>
     <div class="nav-logo-text">Vet <span>Solutions</span></div>
   </a>
   <div class="nav-links">
-    <a class="nav-link active" href="index.html">Home</a>
-    <a class="nav-link" href="mailto:wildeautomations@gmail.com">Contact</a>
+    <a class="nav-link" href="#tools">Tools</a>
+    <a class="nav-link" href="#how">How It Works</a>
+    <a class="nav-link nav-cta" href="#contact">Get in Touch</a>
   </div>
 </nav>
 
+<!-- HERO -->
 <div class="hero">
-  <div class="hero-badge">Built for Veterinary Clinics</div>
-  <h1>Smart Tools for <span>Modern Clinics</span></h1>
-  <p>Two powerful sides — automated report generation and deep PMS integration — so your clinic runs on data, not guesswork.</p>
+  <div class="hero-glow"></div>
+  <div class="hero-badge">🐾 Built for Veterinary Clinics</div>
+  <h1>Run Your Clinic<br/>on <span>Real Data</span></h1>
+  <p>Vet Solutions gives clinics powerful report generation tools and seamless PMS integration — so you always know where your money is going.</p>
+  <div class="hero-btns">
+    <a class="btn-primary" href="price-analyzer.html">Try Price Analyzer →</a>
+    <a class="btn-ghost" href="#contact">Request a Demo</a>
+  </div>
 </div>
 
-<div class="pillars">
+<!-- TOOLS -->
+<div class="section" id="tools">
+  <div class="section-label">Platform</div>
+  <div class="section-title">Two Powerful Sides</div>
+  <div class="section-sub" style="margin-bottom:28px">Generate instant reports from your existing data, or connect directly to your PMS for fully automated insights.</div>
 
-  <!-- LEFT: REPORT GENERATION -->
-  <div class="pillar">
-    <div class="pillar-header">
-      <div class="pillar-icon">📊</div>
-      <div class="pillar-title">Report Generation</div>
-    </div>
-    <div class="pillar-subtitle">Upload your clinic data and get instant, actionable reports — no software install needed.</div>
-    <hr class="pillar-divider"/>
-
-    <div class="report-card live" onclick="location.href='price-analyzer.html'">
-      <div class="rc-top">
-        <div class="rc-name">💰 Inflation Adjustment Report</div>
-        <span class="rc-badge badge-live">Live</span>
-      </div>
-      <div class="rc-desc">Identify services with stale pricing and calculate how much revenue you've left on the table using Canadian CPI data.</div>
-      <a class="rc-link" href="price-analyzer.html">Open report →</a>
-    </div>
-
-    <div class="report-card coming">
-      <div class="rc-top">
-        <div class="rc-name">📈 Revenue Trend Report</div>
-        <span class="rc-badge badge-soon">Coming Soon</span>
-      </div>
-      <div class="rc-desc">Month-over-month and year-over-year revenue breakdowns by service category and provider.</div>
-    </div>
-
-    <div class="report-card coming">
-      <div class="rc-top">
-        <div class="rc-name">🩺 Service Utilization Report</div>
-        <span class="rc-badge badge-soon">Coming Soon</span>
-      </div>
-      <div class="rc-desc">See which services are underused and which are your top performers. Spot gaps in your offering.</div>
-    </div>
-
-    <div class="report-card coming">
-      <div class="rc-top">
-        <div class="rc-name">👥 Client Retention Report</div>
-        <span class="rc-badge badge-soon">Coming Soon</span>
-      </div>
-      <div class="rc-desc">Track which clients are drifting away, how often patients return, and where you're losing recurring revenue.</div>
-    </div>
-
-    <div class="report-card coming">
-      <div class="rc-top">
-        <div class="rc-name">💊 Inventory Cost Report</div>
-        <span class="rc-badge badge-soon">Coming Soon</span>
-      </div>
-      <div class="rc-desc">Analyze your top supply costs, expiry waste, and markup margins across medications and supplies.</div>
-    </div>
-
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('reports',this)">📊 Report Generation</button>
+    <button class="tab" onclick="switchTab('pms',this)">🔌 PMS Integration</button>
   </div>
 
-  <!-- RIGHT: PMS INTEGRATION -->
-  <div class="pillar">
-    <div class="pillar-header">
-      <div class="pillar-icon soft">🔌</div>
-      <div class="pillar-title">PMS Integration</div>
-    </div>
-    <div class="pillar-subtitle">Connect directly to your Practice Management System — automate reports, sync data, and eliminate manual exports.</div>
-    <hr class="pillar-divider"/>
+  <!-- REPORTS TAB -->
+  <div class="tab-panel active" id="tab-reports">
+    <div class="reports-grid">
 
-    <div style="font-size:.78rem;color:#64748b;margin-bottom:16px;line-height:1.6">
-      Instead of exporting CSVs manually, Vet Solutions connects to your PMS and pulls data automatically — so your reports are always fresh.
-    </div>
+      <div class="report-card live" onclick="location.href='price-analyzer.html'">
+        <span class="rc-badge badge-live">Live</span>
+        <div class="rc-icon">💰</div>
+        <div class="rc-name">Inflation Adjustment Report</div>
+        <div class="rc-desc">Identify services with stale pricing and calculate the revenue you've left on the table — powered by Canadian CPI data going back to 2005.</div>
+        <a class="rc-link" href="price-analyzer.html">Open report →</a>
+      </div>
 
-    <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#94a3b8;margin-bottom:10px">Supported Systems</div>
+      <div class="report-card coming">
+        <span class="rc-badge badge-soon">Coming Soon</span>
+        <div class="rc-icon">📈</div>
+        <div class="rc-name">Revenue Trend Report</div>
+        <div class="rc-desc">Month-over-month and year-over-year revenue breakdowns by service category and provider.</div>
+      </div>
+
+      <div class="report-card coming">
+        <span class="rc-badge badge-soon">Coming Soon</span>
+        <div class="rc-icon">🩺</div>
+        <div class="rc-name">Service Utilization Report</div>
+        <div class="rc-desc">See which services are underused and which are your top performers. Spot gaps in your offering.</div>
+      </div>
+
+      <div class="report-card coming">
+        <span class="rc-badge badge-soon">Coming Soon</span>
+        <div class="rc-icon">👥</div>
+        <div class="rc-name">Client Retention Report</div>
+        <div class="rc-desc">Track which clients are drifting away, how often patients return, and where you're losing recurring revenue.</div>
+      </div>
+
+      <div class="report-card coming">
+        <span class="rc-badge badge-soon">Coming Soon</span>
+        <div class="rc-icon">💊</div>
+        <div class="rc-name">Inventory Cost Report</div>
+        <div class="rc-desc">Analyze top supply costs, expiry waste, and markup margins across medications and supplies.</div>
+      </div>
+
+      <div class="report-card coming">
+        <span class="rc-badge badge-soon">Coming Soon</span>
+        <div class="rc-icon">👨‍⚕️</div>
+        <div class="rc-name">Provider Performance Report</div>
+        <div class="rc-desc">Compare revenue, appointment volume, and service mix across vets and technicians.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PMS TAB -->
+  <div class="tab-panel" id="tab-pms">
+    <p style="font-size:.88rem;color:var(--muted);line-height:1.7;margin-bottom:24px;max-width:600px">Instead of exporting CSVs manually, connect Vet Solutions directly to your PMS and get reports that update automatically — no exports, no data entry.</p>
+
     <div class="pms-grid">
-
       <div class="pms-card coming">
-        <div class="pms-logo">🖥️</div>
+        <div class="pms-logo-wrap">🖥️</div>
         <div class="pms-name">Cornerstone</div>
         <div class="pms-status">Coming Soon</div>
       </div>
-
       <div class="pms-card coming">
-        <div class="pms-logo">⚕️</div>
+        <div class="pms-logo-wrap">⚕️</div>
         <div class="pms-name">AVImark</div>
         <div class="pms-status">Coming Soon</div>
       </div>
-
       <div class="pms-card coming">
-        <div class="pms-logo">🐾</div>
+        <div class="pms-logo-wrap">🐾</div>
         <div class="pms-name">ezyVet</div>
         <div class="pms-status">Coming Soon</div>
       </div>
-
       <div class="pms-card coming">
-        <div class="pms-logo">📋</div>
+        <div class="pms-logo-wrap">📋</div>
         <div class="pms-name">Provet Cloud</div>
         <div class="pms-status">Coming Soon</div>
       </div>
-
       <div class="pms-card coming">
-        <div class="pms-logo">🔬</div>
+        <div class="pms-logo-wrap">🔬</div>
         <div class="pms-name">VetLink</div>
         <div class="pms-status">Coming Soon</div>
       </div>
-
       <div class="pms-card coming">
-        <div class="pms-logo">💻</div>
+        <div class="pms-logo-wrap">💻</div>
         <div class="pms-name">ImproMed</div>
         <div class="pms-status">Coming Soon</div>
       </div>
-
     </div>
 
-    <div style="margin-top:20px;background:#f0f6ff;border:1px solid #dbeafe;border-radius:10px;padding:16px">
-      <div style="font-size:.82rem;font-weight:700;color:#2563eb;margin-bottom:6px">🚀 Want early access?</div>
-      <div style="font-size:.78rem;color:#64748b;line-height:1.55;margin-bottom:12px">We're onboarding clinics for PMS integration beta. Get automated reports without manual CSV exports.</div>
-      <a href="mailto:wildeautomations@gmail.com?subject=Vet Solutions PMS Integration Interest" style="display:inline-block;background:linear-gradient(135deg,#2563eb,#60a5fa);color:#fff;text-decoration:none;padding:9px 18px;border-radius:8px;font-size:.8rem;font-weight:700">Get Early Access →</a>
+    <div class="pms-cta">
+      <h3>🚀 Join the Integration Beta</h3>
+      <p>We're onboarding clinics for PMS integration early access. Get automated reports without ever exporting a CSV again.</p>
+      <button class="btn-purple" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Request Early Access →</button>
     </div>
-
   </div>
-
 </div>
 
+<!-- HOW IT WORKS -->
+<div class="how-section" id="how">
+  <div class="section">
+    <div class="section-label">Process</div>
+    <div class="section-title">Simple by Design</div>
+    <div class="section-sub">No software to install. No IT department needed. Just upload your data and get answers.</div>
+    <div class="steps-row">
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-title">Export from Your PMS</div>
+        <div class="step-desc">Run your usual reports in Cornerstone, AVImark, or any PMS and save as CSV. Takes 2 minutes.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-title">Upload & Analyze</div>
+        <div class="step-desc">Drag your files into the tool. Everything runs in your browser — your data never leaves your computer.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-title">Act on Insights</div>
+        <div class="step-desc">Get clear recommendations with numbers behind them. Export to CSV and share with your team.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CONTACT -->
+<div class="section" id="contact">
+  <div class="contact-wrap">
+    <div class="contact-info">
+      <div class="section-label">Contact</div>
+      <h2>Let's Talk About Your Clinic</h2>
+      <p>Whether you want a demo, have a question about a specific report, or want to get on the PMS integration waitlist — we'd love to hear from you.</p>
+      <div class="contact-detail">
+        <div class="contact-detail-icon">📧</div>
+        <span>wildeautomations@gmail.com</span>
+      </div>
+      <div class="contact-detail">
+        <div class="contact-detail-icon">🌐</div>
+        <span>Alberta, Canada</span>
+      </div>
+      <div class="contact-detail">
+        <div class="contact-detail-icon">⚡</div>
+        <span>Typically respond within 24 hours</span>
+      </div>
+    </div>
+
+    <div class="contact-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">First Name</label>
+          <input class="form-input" id="cf-first" type="text" placeholder="Jane"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Last Name</label>
+          <input class="form-input" id="cf-last" type="text" placeholder="Smith"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input class="form-input" id="cf-email" type="email" placeholder="jane@rivervallevet.ca"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Clinic Name</label>
+        <input class="form-input" id="cf-clinic" type="text" placeholder="River Valley Veterinary"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">What are you interested in?</label>
+        <select class="form-input" id="cf-interest">
+          <option value="">Select an option…</option>
+          <option value="price-analyzer">Price Analyzer</option>
+          <option value="pms-integration">PMS Integration</option>
+          <option value="custom-report">Custom Report</option>
+          <option value="demo">General Demo</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Message</label>
+        <textarea class="form-input" id="cf-message" placeholder="Tell us about your clinic and what you're looking for…"></textarea>
+      </div>
+      <button class="btn-submit" id="cf-submit" onclick="submitForm()">Send Message →</button>
+      <div class="form-status" id="cf-status"></div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
 <footer>
-  Built by <a href="https://wildeautomations.com" target="_blank">Wilde Automations</a> &nbsp;·&nbsp; © 2026 Vet Solutions
+  <a class="footer-logo" href="index.html">
+    <div class="footer-logo-icon">🏥</div>
+    <div class="footer-logo-text">Vet <span>Solutions</span></div>
+  </a>
+  <div class="footer-links">
+    <a href="price-analyzer.html">Price Analyzer</a>
+    <a href="#contact">Contact</a>
+    <a href="https://wildeautomations.com" target="_blank">Wilde Automations</a>
+  </div>
+  <div class="footer-copy">© 2026 Vet Solutions · Built by Wilde Automations · All data stays in your browser.</div>
 </footer>
+
+<script>
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-' + name).classList.add('active');
+}
+
+async function submitForm() {
+  const first = document.getElementById('cf-first').value.trim();
+  const last = document.getElementById('cf-last').value.trim();
+  const email = document.getElementById('cf-email').value.trim();
+  const clinic = document.getElementById('cf-clinic').value.trim();
+  const interest = document.getElementById('cf-interest').value;
+  const message = document.getElementById('cf-message').value.trim();
+
+  if (!first || !email || !clinic) {
+    showStatus('Please fill in your name, email, and clinic name.', 'error');
+    return;
+  }
+
+  const btn = document.getElementById('cf-submit');
+  btn.disabled = true;
+  btn.textContent = 'Sending…';
+
+  try {
+    const SB_URL = 'https://xacehhtgvubcqdoltazg.supabase.co';
+    const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhhY2VoaHRndnViY3Fkb2x0YXpnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3Mzk0Mjg2NywiZXhwIjoyMDg5NTE4ODY3fQ.5sqLtRtRnWEEuytTsfGhh1hmrQkTilL4Bd_rMrqmQ9A';
+
+    const res = await fetch(`${SB_URL}/rest/v1/vet_solutions_contacts`, {
+      method: 'POST',
+      headers: {
+        'apikey': SB_KEY,
+        'Authorization': `Bearer ${SB_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({
+        first_name: first,
+        last_name: last,
+        email,
+        clinic_name: clinic,
+        interest,
+        message,
+        submitted_at: new Date().toISOString()
+      })
+    });
+
+    if (res.ok || res.status === 201) {
+      showStatus('✅ Message sent! We\'ll be in touch within 24 hours.', 'success');
+      ['cf-first','cf-last','cf-email','cf-clinic','cf-message'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('cf-interest').value = '';
+    } else {
+      throw new Error('Submit failed: ' + res.status);
+    }
+  } catch(e) {
+    showStatus('Something went wrong. Please email us directly at wildeautomations@gmail.com', 'error');
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'Send Message →';
+}
+
+function showStatus(msg, type) {
+  const el = document.getElementById('cf-status');
+  el.textContent = msg;
+  el.className = 'form-status ' + type;
+}
+</script>
 
 </body>
 </html>
