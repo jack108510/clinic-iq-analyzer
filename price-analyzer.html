@@ -537,15 +537,6 @@ function showResults(clinicName) {
     <div class="summary-card"><div class="summary-val green">${allResults.length > 0 ? '+' + allResults[0].inf + '%' : '—'}</div><div class="summary-label">Max Inflation</div></div>
   `;
 
-  const top5 = allResults.slice(0,5);
-  document.getElementById('top-services-list').innerHTML = top5.map(r => `
-    <div class="service-row">
-      <div class="service-name">${esc(r.desc)}</div>
-      <div class="service-age">${r.yrs}yr ago</div>
-      <div class="service-gap">${r.diff!=null?'+$'+r.diff.toFixed(2):'—'}</div>
-    </div>
-  `).join('');
-
   goTo(5);
 }
 
