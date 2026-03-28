@@ -548,7 +548,7 @@ function saveAndOpenReport(){
   localStorage.setItem('vs_reports', JSON.stringify(reports));
 
   // Open my-reports page
-  window.open('my-reports.html?id=' + encodeURIComponent(ts), '_blank');
+  window.location.href = 'my-reports.html?id=' + encodeURIComponent(ts);
 }
 
 
