@@ -319,6 +319,7 @@ function selectPMS(pms, el) {
   const pmsNames = {cornerstone:'Cornerstone',avimark:'AVImark',ezyvet:'ezyVet',other:'your PMS'};
   document.getElementById('upload-instructions').textContent =
     `Export these reports from ${pmsNames[pms]} and drop them below. Your data stays in your browser — nothing is sent anywhere.`;
+  setTimeout(() => goTo(2), 400);
 }
 
 // ── FILE HANDLING ─────────────────────────────────────────────────
