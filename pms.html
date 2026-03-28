@@ -20,27 +20,47 @@ nav{background:var(--white);border-bottom:1px solid var(--blue-border);padding:0
 .nav-cta{background:var(--blue);color:#fff!important;border-radius:8px}
 .nav-cta:hover{background:#1d4ed8!important}
 
-.page-header{background:linear-gradient(180deg,var(--white) 0%,var(--bg) 100%);border-bottom:1px solid var(--blue-border);padding:56px 24px 48px;text-align:center;position:relative;overflow:hidden}
+/* HERO */
+.page-header{background:linear-gradient(180deg,var(--white) 0%,var(--bg) 100%);border-bottom:1px solid var(--blue-border);padding:64px 24px 56px;text-align:center;position:relative;overflow:hidden}
 .page-header-glow{position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:600px;height:350px;background:radial-gradient(ellipse,rgba(124,58,237,.06) 0%,transparent 70%);pointer-events:none}
 .page-label{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-bottom:10px}
-.page-header h1{font-size:2.4rem;font-weight:900;color:var(--navy);margin-bottom:14px}
-.page-header p{font-size:.95rem;color:var(--muted);line-height:1.7;max-width:580px;margin:0 auto}
+.page-header h1{font-size:2.5rem;font-weight:900;color:var(--navy);margin-bottom:14px;line-height:1.1}
+.page-header p{font-size:.95rem;color:var(--muted);line-height:1.75;max-width:600px;margin:0 auto}
 
 .section{max-width:1000px;margin:0 auto;padding:56px 24px}
 .section-label{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:10px}
 .section-title{font-size:1.5rem;font-weight:900;color:var(--navy);margin-bottom:10px}
-.section-sub{font-size:.9rem;color:var(--muted);line-height:1.7;max-width:580px;margin-bottom:32px}
+.section-sub{font-size:.9rem;color:var(--muted);line-height:1.7;max-width:620px;margin-bottom:32px}
 
-/* WHAT WE OFFER */
-.offer-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:56px}
+/* WHAT WE ARE */
+.positioning{background:var(--white);border:1px solid var(--blue-border);border-radius:16px;padding:36px;margin-bottom:48px;display:grid;grid-template-columns:1fr 1fr;gap:32px}
+@media(max-width:680px){.positioning{grid-template-columns:1fr}}
+.pos-side{border-radius:12px;padding:24px}
+.pos-side.blue{background:var(--blue-dim);border:1px solid var(--blue-border)}
+.pos-side.purple{background:rgba(124,58,237,.05);border:1px solid rgba(124,58,237,.15)}
+.pos-label{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}
+.pos-label.blue{color:var(--blue)}
+.pos-label.purple{color:var(--purple)}
+.pos-title{font-size:1rem;font-weight:800;color:var(--navy);margin-bottom:8px}
+.pos-desc{font-size:.82rem;color:var(--muted);line-height:1.65}
+
+/* OFFER CARDS */
+.offer-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:48px}
 .offer-card{background:var(--white);border:1px solid var(--blue-border);border-radius:14px;padding:26px;transition:all .2s}
 .offer-card:hover{border-color:rgba(124,58,237,.3);box-shadow:0 4px 20px rgba(124,58,237,.08)}
 .offer-icon{width:44px;height:44px;border-radius:11px;background:linear-gradient(135deg,var(--purple),#a78bfa);display:flex;align-items:center;justify-content:center;margin-bottom:16px;box-shadow:0 3px 10px rgba(124,58,237,.2)}
 .offer-title{font-size:.95rem;font-weight:700;color:var(--navy);margin-bottom:8px}
 .offer-desc{font-size:.8rem;color:var(--muted);line-height:1.65}
 
-/* HOW IT WORKS */
-.process-steps{display:flex;flex-direction:column;gap:0;margin-bottom:56px;position:relative}
+/* CONSULTING SECTION */
+.consulting-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:48px}
+@media(max-width:680px){.consulting-grid{grid-template-columns:1fr}}
+.consult-card{background:var(--white);border:1px solid var(--blue-border);border-radius:14px;padding:24px;border-left:4px solid var(--purple)}
+.consult-title{font-size:.92rem;font-weight:700;color:var(--navy);margin-bottom:6px}
+.consult-desc{font-size:.8rem;color:var(--muted);line-height:1.65}
+
+/* PROCESS */
+.process-steps{display:flex;flex-direction:column;gap:0;margin-bottom:48px;position:relative}
 .process-step{display:grid;grid-template-columns:auto 1fr;gap:20px;padding:24px 0;position:relative}
 .process-step:not(:last-child)::after{content:'';position:absolute;left:19px;top:60px;bottom:0;width:2px;background:var(--blue-border)}
 .step-circle{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--purple),#a78bfa);color:#fff;font-size:.9rem;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 3px 10px rgba(124,58,237,.2);position:relative;z-index:1}
@@ -48,21 +68,21 @@ nav{background:var(--white);border-bottom:1px solid var(--blue-border);padding:0
 .step-title{font-size:.95rem;font-weight:700;color:var(--navy);margin-bottom:6px}
 .step-desc{font-size:.82rem;color:var(--muted);line-height:1.65}
 
-/* PMS SYSTEMS */
-.pms-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:40px}
+/* PMS */
+.pms-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:12px}
 .pms-card{background:var(--white);border:1px solid var(--blue-border);border-radius:12px;padding:20px;text-align:center}
 .pms-abbr{width:48px;height:48px;border-radius:12px;background:var(--blue-dim);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--blue);margin:0 auto 10px}
 .pms-name{font-size:.85rem;font-weight:700;color:var(--navy);margin-bottom:3px}
 .pms-status{font-size:.68rem;color:#94a3b8}
 
 /* CTA */
-.cta-block{background:linear-gradient(135deg,var(--purple),#6d28d9);border-radius:20px;padding:48px 40px;text-align:center;color:#fff}
+.cta-block{background:linear-gradient(135deg,var(--purple),#6d28d9);border-radius:20px;padding:48px 40px;text-align:center;color:#fff;margin-top:48px}
 .cta-block h2{font-size:1.8rem;font-weight:900;margin-bottom:12px}
 .cta-block p{font-size:.92rem;opacity:.85;line-height:1.7;max-width:500px;margin:0 auto 28px}
 .cta-btn{display:inline-flex;align-items:center;gap:8px;background:#fff;color:var(--purple);padding:14px 28px;border-radius:10px;font-size:.95rem;font-weight:700;text-decoration:none;transition:all .2s}
 .cta-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.2)}
 
-footer{background:var(--navy);color:rgba(255,255,255,.5);padding:28px 40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-top:40px}
+footer{background:var(--navy);color:rgba(255,255,255,.5);padding:28px 40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-top:0}
 .footer-logo{display:flex;align-items:center;gap:8px;text-decoration:none}
 .footer-logo-icon{width:30px;height:30px;background:linear-gradient(135deg,var(--blue),var(--blue-light));border-radius:7px;display:flex;align-items:center;justify-content:center}
 .footer-logo-text{font-size:.95rem;font-weight:700;color:#fff}.footer-logo-text span{color:var(--blue-light)}
@@ -86,103 +106,147 @@ footer{background:var(--navy);color:rgba(255,255,255,.5);padding:28px 40px;displ
   </div>
 </nav>
 
+<!-- HERO -->
 <div class="page-header">
   <div class="page-header-glow"></div>
-  <div class="page-label">PMS Integration</div>
-  <h1>Automated. Connected. Hands-Off.</h1>
-  <p>We connect directly to your Practice Management System with full two-way integration — automating pricing, inventory receiving, reordering, and reporting so your team can focus on patient care.</p>
+  <div class="page-label">PMS Integration & Consulting</div>
+  <h1>We Don't Just Report.<br/>We Fix the Problem.</h1>
+  <p>Vet Solutions works directly inside your clinic's Practice Management System to implement automations, optimize your pricing, and streamline inventory — with expert guidance every step of the way.</p>
 </div>
 
-<!-- WHAT WE OFFER -->
 <div class="section">
-  <div class="section-label">What's Included</div>
-  <div class="section-title">Everything You Need, Set Up For You</div>
-  <div class="section-sub">Our integration service handles the technical side completely. You get insights — we handle the connection, data syncing, and reporting pipeline.</div>
+
+  <!-- WHAT WE ARE -->
+  <div class="section-label">Our Approach</div>
+  <div class="section-title">Consulting + Hands-On Implementation</div>
+  <div class="section-sub">Most software vendors hand you a tool and walk away. We come in as a partner — understanding your clinic's workflow, identifying what's costing you time and money, and building the solution directly inside your PMS.</div>
+
+  <div class="positioning">
+    <div class="pos-side blue">
+      <div class="pos-label blue">Without Us</div>
+      <div class="pos-title">Manual, Slow, and Leaking Revenue</div>
+      <div class="pos-desc">Prices haven't been touched in years. Inventory is received by hand. Staff spend hours on tasks that should be automatic. You're leaving money on the table and burning out your team.</div>
+    </div>
+    <div class="pos-side purple">
+      <div class="pos-label purple">With Vet Solutions</div>
+      <div class="pos-title">Automated, Optimized, and Running Smoothly</div>
+      <div class="pos-desc">Pricing is up to date and strategically rounded. Inventory receives itself. Reorders happen before you run out. Your team focuses on patients — not spreadsheets.</div>
+    </div>
+  </div>
+
+  <!-- WHAT WE DO -->
+  <div class="section-label">What We Implement</div>
+  <div class="section-title">Features We Build Into Your PMS</div>
+  <div class="section-sub">These aren't generic recommendations — we configure and deploy each of these directly inside your practice management system.</div>
 
   <div class="offer-grid">
 
     <div class="offer-card">
       <div class="offer-icon">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
       </div>
-      <div class="offer-title">Automated Report Delivery</div>
-      <div class="offer-desc">Your reports run on a schedule you set — daily, weekly, or monthly. Results land in your inbox or dashboard automatically.</div>
+      <div class="offer-title">99 Cent Price Rounding</div>
+      <div class="offer-desc">We update your entire price list to .99 endings — a proven strategy that increases perceived value and can meaningfully improve revenue without raising prices. Done in one pass, directly in your PMS.</div>
     </div>
 
     <div class="offer-card">
       <div class="offer-icon">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M16 3H8a2 2 0 00-2 2v2h12V5a2 2 0 00-2-2z"/><path d="M12 12v4M10 14h4"/></svg>
       </div>
-      <div class="offer-title">Direct PMS Connection</div>
-      <div class="offer-desc">We connect directly to your PMS with full integration — reading data, pushing updates, and automating actions inside your system.</div>
+      <div class="offer-title">Automated Receiving</div>
+      <div class="offer-desc">We configure your PMS to automatically update inventory quantities when shipments arrive. No manual receiving, no data entry delays — your stock levels are accurate in real time.</div>
     </div>
 
     <div class="offer-card">
       <div class="offer-icon">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
       </div>
-      <div class="offer-title">All Reports Included</div>
-      <div class="offer-desc">Every report in our library runs automatically — inflation adjustments, revenue trends, client retention, and more as we build them.</div>
+      <div class="offer-title">Smart Reorder & Inventory Management</div>
+      <div class="offer-desc">We set minimum stock thresholds for every critical item in your inventory. When levels drop, reorder suggestions are automatically generated — so you never run out of medications or supplies unexpectedly.</div>
     </div>
 
     <div class="offer-card">
       <div class="offer-icon">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
       </div>
-      <div class="offer-title">Smart Alerts</div>
-      <div class="offer-desc">Get notified when something needs attention — a service hasn't been priced in 3 years, revenue dropped month-over-month, or inventory is running low.</div>
+      <div class="offer-title">Low Stock Alerts</div>
+      <div class="offer-desc">Real-time notifications sent to the right people the moment something drops below threshold — before it becomes a problem for your patients or your workflow.</div>
     </div>
 
     <div class="offer-card">
       <div class="offer-icon">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
       </div>
-      <div class="offer-title">Multi-Clinic Support</div>
-      <div class="offer-desc">Running more than one location? We handle data from multiple clinics in one place with combined and per-location reporting.</div>
+      <div class="offer-title">Inflation-Adjusted Pricing</div>
+      <div class="offer-desc">Using our Price Analyzer report as a starting point, we identify every stale service and implement updated pricing directly in your PMS — not just flagging it, but actually making the changes.</div>
     </div>
 
     <div class="offer-card">
       <div class="offer-icon">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
       </div>
-      <div class="offer-title">Onboarding &amp; Support</div>
-      <div class="offer-desc">We handle the full setup and stay available for questions. You're not handed a manual — we walk you through everything.</div>
+      <div class="offer-title">Ongoing Support & Optimization</div>
+      <div class="offer-desc">We don't disappear after setup. As your clinic grows or your PMS updates, we stay available to adjust configurations, add new automations, and keep everything running smoothly.</div>
     </div>
 
   </div>
 
+  <!-- CONSULTING -->
+  <div class="section-label">Advisory Services</div>
+  <div class="section-title">Expert Guidance, Not Just Software</div>
+  <div class="section-sub">Beyond implementation, we provide the strategic insight to help clinic owners and managers make better decisions. Think of us as an operations consultant who also knows your PMS inside out.</div>
+
+  <div class="consulting-grid">
+    <div class="consult-card">
+      <div class="consult-title">Pricing Strategy Review</div>
+      <div class="consult-desc">We analyze your full service price list against CPI benchmarks and competitor context, then provide clear recommendations on where to adjust — and by how much.</div>
+    </div>
+    <div class="consult-card">
+      <div class="consult-title">Workflow Audit</div>
+      <div class="consult-desc">We walk through your current clinic workflows and identify the manual tasks that are costing your team the most time. Then we tell you exactly what can be automated and how.</div>
+    </div>
+    <div class="consult-card">
+      <div class="consult-title">Inventory Optimization</div>
+      <div class="consult-desc">We review your current stock levels, reorder patterns, and supplier setup to eliminate overstocking and stockouts — and recommend the right minimums for your patient volume.</div>
+    </div>
+    <div class="consult-card">
+      <div class="consult-title">Revenue Gap Analysis</div>
+      <div class="consult-desc">We identify services that are underpriced, underutilized, or missing entirely from your offering — with real numbers showing what you could be capturing.</div>
+    </div>
+  </div>
+
   <!-- HOW IT WORKS -->
   <div class="section-label">Process</div>
-  <div class="section-title">How Integration Works</div>
-  <div class="section-sub">From first contact to live reports — here's what to expect.</div>
+  <div class="section-title">How We Work With Your Clinic</div>
+  <div class="section-sub" style="margin-bottom:28px">A straightforward engagement — no long contracts, no mystery deliverables.</div>
 
   <div class="process-steps">
     <div class="process-step">
       <div class="step-circle">1</div>
       <div class="step-body">
-        <div class="step-title">Tell Us About Your Clinic</div>
-        <div class="step-desc">Fill out the contact form with your PMS software and what you're looking to track. We'll reach out within 24 hours to discuss your setup.</div>
+        <div class="step-title">Discovery Call</div>
+        <div class="step-desc">We start with a conversation about your clinic — your PMS, your current pain points, and what success looks like for you. No pitch, just questions.</div>
       </div>
     </div>
     <div class="process-step">
       <div class="step-circle">2</div>
       <div class="step-body">
-        <div class="step-title">We Configure the Connection</div>
-        <div class="step-desc">Our team sets up a secure read-only connection to your PMS. We handle all the technical steps — you just need to approve the access.</div>
+        <div class="step-title">We Review Your Data</div>
+        <div class="step-desc">You share exports from your PMS. We run the analysis, identify the gaps, and come back with a clear picture of what's costing you money and what we can fix.</div>
       </div>
     </div>
     <div class="process-step">
       <div class="step-circle">3</div>
       <div class="step-body">
-        <div class="step-title">Reports Go Live</div>
-        <div class="step-desc">Within a few days your reports are running on schedule. We do a walkthrough to make sure everything looks right and you know how to read the results.</div>
+        <div class="step-title">Implementation</div>
+        <div class="step-desc">We get access to your PMS and implement everything we scoped together — pricing updates, inventory configuration, automation rules. You review and approve every change.</div>
       </div>
     </div>
     <div class="process-step">
       <div class="step-circle">4</div>
       <div class="step-body">
-        <div class="step-title">Ongoing — Nothing for You to Do</div>
-        <div class="step-desc">Reports run automatically. We monitor the connection, push new reports as they're released, and are available whenever you have questions.</div>
+        <div class="step-title">Handoff & Ongoing Support</div>
+        <div class="step-desc">We walk your team through everything that changed and why. From there, we stay available for questions, adjustments, and new automations as your clinic grows.</div>
       </div>
     </div>
   </div>
@@ -198,13 +262,13 @@ footer{background:var(--navy);color:rgba(255,255,255,.5);padding:28px 40px;displ
     <div class="pms-card"><div class="pms-abbr">VTL</div><div class="pms-name">VetLink</div><div class="pms-status">Coming Soon</div></div>
     <div class="pms-card"><div class="pms-abbr">IMP</div><div class="pms-name">ImproMed</div><div class="pms-status">Coming Soon</div></div>
   </div>
-  <p style="font-size:.8rem;color:var(--muted)">Don't see yours? Contact us — if it exports data, we can likely work with it.</p>
+  <p style="font-size:.8rem;color:var(--muted);margin-bottom:0">Don't see yours? Contact us — if it can export data, we can work with it.</p>
 
   <!-- CTA -->
-  <div class="cta-block" style="margin-top:48px">
-    <h2>Ready to Get Started?</h2>
-    <p>We're onboarding clinics for early access. Get fully automated reporting set up for your clinic — no technical work required on your end.</p>
-    <a class="cta-btn" href="index.html#contact">Request Early Access</a>
+  <div class="cta-block">
+    <h2>Let's Look at Your Clinic</h2>
+    <p>No commitment required. We'll review your data, show you what we find, and let the numbers speak for themselves.</p>
+    <a class="cta-btn" href="index.html#contact">Book a Discovery Call</a>
   </div>
 
 </div>
