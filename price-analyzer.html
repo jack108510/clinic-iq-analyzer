@@ -283,7 +283,7 @@ input[type=file]{display:none}
     <div class="full-report-cta">
       <h3>Want the Full Report?</h3>
       <p>The full report includes every stale service, line-by-line suggested pricing, inflation breakdown, and a CSV export you can share with your team.</p>
-      <button class="btn-full-report" id="btn-full-report" onclick="toggleFullReport()">View Full Report →</button>
+      <button class="btn-full-report" id="btn-full-report" onclick="saveAndOpenReport()">View Full Report →</button>
       <br/>
       <button class="btn-restart" onclick="restart()">← Start Over</button>
     </div>
@@ -522,21 +522,35 @@ function showResults(clinicName) {
 
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
-function toggleFullReport(){
-  const wrap = document.getElementById('full-report-wrap');
-  const btn = document.getElementById('btn-full-report');
-  if(!wrap) return;
-  const visible = wrap.classList.contains('visible');
-  if(!visible){
-    renderFullReport();
-    wrap.classList.add('visible');
-    setTimeout(() => wrap.scrollIntoView({behavior:'smooth', block:'start'}), 50);
-    btn.textContent = 'Hide Report ↑';
-  } else {
-    wrap.classList.remove('visible');
-    btn.textContent = 'View Full Report →';
-  }
+function saveAndOpenReport(){
+  const clinicName = document.getElementById('clinic-name').value.trim() || 'Clinic';
+  const dateStr = new Date().toLocaleDateString('en-CA',{year:'numeric',month:'long',day:'numeric'});
+  const ts = new Date().toISOString();
+
+  // Build report data
+  const report = {
+    id: ts,
+    clinic: clinicName,
+    date: dateStr,
+    timestamp: ts,
+    hasSales: hasSales,
+    totalStale: allResults.length,
+    totalLost: allResults.reduce((s,r)=>s+(r.lostRev||0),0),
+    pms: selectedPMS,
+    results: allResults
+  };
+
+  // Save to localStorage
+  let reports = [];
+  try { reports = JSON.parse(localStorage.getItem('vs_reports') || '[]'); } catch{}
+  reports.unshift(report); // newest first
+  if(reports.length > 20) reports = reports.slice(0,20); // cap at 20
+  localStorage.setItem('vs_reports', JSON.stringify(reports));
+
+  // Open my-reports page
+  window.open('my-reports.html?id=' + encodeURIComponent(ts), '_blank');
 }
+
 
 function renderFullReport(){
   const clinicName = document.getElementById('clinic-name').value.trim();
