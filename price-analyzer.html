@@ -189,16 +189,6 @@ input[type=file]{display:none}
         <div class="pms-option-sub">Henry Schein AVImark</div>
         <div class="pms-option-check">✓</div>
       </div>
-      <div class="pms-option" onclick="selectPMS('ezyvet',this)">
-        <div class="pms-option-name">ezyVet</div>
-        <div class="pms-option-sub">ezyVet Cloud PMS</div>
-        <div class="pms-option-check">✓</div>
-      </div>
-      <div class="pms-option" onclick="selectPMS('other',this)">
-        <div class="pms-option-name">Other / Unsure</div>
-        <div class="pms-option-sub">We'll use standard CSV format</div>
-        <div class="pms-option-check">✓</div>
-      </div>
     </div>
   </div>
 
@@ -317,16 +307,6 @@ const PMS_HINTS = {
     hint1: 'Reports → Inventory → Item List → Export to CSV',
     hint2: 'Reports → Inventory → Price History → all dates → Export to CSV',
     hint3: 'Reports → Inventory → Service Revenue → last 12 months → Export to CSV'
-  },
-  ezyvet: {
-    hint1: 'Reports → Products → Product List → Export CSV',
-    hint2: 'Reports → Products → Price Change History → all time → Export CSV',
-    hint3: 'Reports → Financial → Service Revenue → last 365 days → Export CSV'
-  },
-  other: {
-    hint1: 'Export your full service/item list with current prices as CSV',
-    hint2: 'Export your price history / price change log as CSV',
-    hint3: 'Export your service revenue for the last 12 months as CSV (optional)'
   }
 };
 
@@ -360,7 +340,7 @@ function selectPMS(pms, el) {
   document.getElementById('hint1').textContent = hints.hint1;
   document.getElementById('hint2').textContent = hints.hint2;
   document.getElementById('hint3').textContent = hints.hint3;
-  const pmsNames = {cornerstone:'Cornerstone',avimark:'AVImark',ezyvet:'ezyVet',other:'your PMS'};
+  const pmsNames = {cornerstone:'Cornerstone',avimark:'AVImark'};
   document.getElementById('upload-instructions').textContent =
     `Export these reports from ${pmsNames[pms]} and drop them below. Your data stays in your browser — nothing is sent anywhere.`;
   setTimeout(() => goTo(2), 350);
@@ -593,10 +573,14 @@ function savePDF(){
 
 function exportCSV(){
   const clinic=(document.getElementById('clinic-name').value.trim()||'clinic').replace(/[^a-z0-9]/gi,'-').toLowerCase();
-  let csv='Item ID,Description,Current Price,Last Changed,Days Since,Years Since,Inflation %,Suggested Price,Per Unit Gap'+(hasSales?',Lost Revenue':'')+'
-';
-  for(const r of allResults)
-    csv+=`"${r.id}","${r.desc}","$${r.price.toFixed(2)}","${r.lastChanged}","${r.daysSince||''}","${r.yrs||''}","${r.inf!=null?r.inf+'%':''}","${r.sug!=null?'$'+r.sug.toFixed(2):''}","${r.diff!=null?'$'+r.diff.toFixed(2):''}"`+(hasSales?`,"${r.lostRev!=null?'$'+r.lostRev.toFixed(2):''}"`:'')+'\n';
+  const nl='\n';
+  let csv='Item ID,Description,Current Price,Last Changed,Days Since,Years Since,Inflation %,Suggested Price,Per Unit Gap'+(hasSales?',Lost Revenue':'')+nl;
+  for(const r of allResults){
+    csv+='"'+r.id+'","'+r.desc+'","$'+r.price.toFixed(2)+'","'+r.lastChanged+'","'+(r.daysSince||'')+'","'+(r.yrs||'')+'","'+(r.inf!=null?r.inf+'%':'')+
+         '","'+(r.sug!=null?'$'+r.sug.toFixed(2):'')+'",'+(r.diff!=null?'"$'+r.diff.toFixed(2)+'"':'""');
+    if(hasSales) csv+=',"'+(r.lostRev!=null?'$'+r.lostRev.toFixed(2):''"';
+    csv+=nl;
+  }
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
   a.download='vet-solutions-'+clinic+'-'+new Date().toISOString().slice(0,10)+'.csv';
