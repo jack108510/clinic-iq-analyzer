@@ -279,6 +279,12 @@ input[type=range]{width:140px;accent-color:var(--blue)}
 </div><!-- /wizard -->
 
 <script>
+function fmtMoney(n) {
+  if (n >= 1e6) return (n / 1e6).toFixed(n % 1e6 === 0 ? 0 : 1) + 'M';
+  if (n >= 1e3) return (n / 1e3).toFixed(n % 1e3 === 0 ? 0 : 1) + 'K';
+  return n.toFixed(0);
+}
+
 // ── STATE ──────────────────────────────────────────────────────────
 let selectedPMS = null;
 let file1Content = null;
@@ -478,7 +484,7 @@ function renderResults() {
   const top10Opp = filteredItems.slice(0,10).reduce((s,i) => s+i.opportunityScore, 0);
   const allOpp   = filteredItems.reduce((s,i) => s+i.opportunityScore, 0);
 
-  document.getElementById('hero-num').textContent = '$' + Math.round(top20Opp).toLocaleString();
+  document.getElementById('hero-num').textContent = '$' + fmtMoney(top20Opp);
   document.getElementById('hero-label').textContent = 'estimated annual gain from a 10% price increase on top 20 high-volume items';
 
   document.getElementById('summary-cards').innerHTML = `
@@ -491,11 +497,11 @@ function renderResults() {
       <div class="summary-label">High-Volume Items</div>
     </div>
     <div class="summary-card">
-      <div class="summary-val green">$${Math.round(top10Opp).toLocaleString()}</div>
+      <div class="summary-val green">$${fmtMoney(top10Opp)}</div>
       <div class="summary-label">Top 10 Opportunity</div>
     </div>
     <div class="summary-card">
-      <div class="summary-val green">$${Math.round(allOpp).toLocaleString()}</div>
+      <div class="summary-val green">$${fmtMoney(allOpp)}</div>
       <div class="summary-label">All Items +10%</div>
     </div>
   `;
