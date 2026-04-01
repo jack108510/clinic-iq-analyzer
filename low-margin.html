@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Low Margin Report — Vet Solutions</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--blue:#2563eb;--blue-light:#60a5fa;--blue-dim:#eff6ff;--blue-border:#dbeafe;--navy:#1e3a5f;--muted:#64748b;--bg:#f0f6ff;--white:#fff;--green:#16a34a;--red:#dc2626;--orange:#ea580c;--yellow:#ca8a04;}
+body{background:var(--bg);color:var(--navy);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;min-height:100vh}
+
+nav{background:var(--white);border-bottom:1px solid var(--blue-border);padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 1px 12px rgba(37,99,235,.06)}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-logo-icon{width:38px;height:38px;background:linear-gradient(135deg,var(--blue),var(--blue-light));border-radius:10px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(37,99,235,.25)}
+.nav-logo-text{font-size:1.15rem;font-weight:800;color:var(--navy)}.nav-logo-text span{color:var(--blue)}
+.nav-links{display:flex;gap:4px}
+.nav-link{text-decoration:none;color:var(--muted);font-size:.88rem;font-weight:500;padding:7px 15px;border-radius:8px;transition:all .15s}
+.nav-link:hover{background:var(--blue-dim);color:var(--blue)}
+.nav-link.active{color:var(--blue);background:var(--blue-dim)}
+.nav-cta{background:var(--blue);color:#fff!important;border-radius:8px}
+.nav-cta:hover{background:#1d4ed8!important}
+
+.page-header{background:linear-gradient(180deg,var(--white) 0%,var(--bg) 100%);border-bottom:1px solid var(--blue-border);padding:48px 24px 40px;text-align:center}
+.page-label{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--blue);margin-bottom:10px}
+.page-header h1{font-size:2.2rem;font-weight:900;color:var(--navy);margin-bottom:12px}
+.page-header p{font-size:.93rem;color:var(--muted);line-height:1.7;max-width:540px;margin:0 auto 10px}
+.privacy-note{display:inline-flex;align-items:center;gap:6px;font-size:.75rem;color:var(--muted);background:var(--blue-dim);border:1px solid var(--blue-border);border-radius:20px;padding:5px 12px;margin-top:6px}
+
+.main{max-width:1100px;margin:0 auto;padding:40px 24px 60px}
+
+/* Upload zone */
+.upload-section{background:var(--white);border:2px dashed var(--blue-border);border-radius:16px;padding:40px 24px;text-align:center;transition:all .2s;cursor:pointer;margin-bottom:32px}
+.upload-section:hover,.upload-section.drag{border-color:var(--blue);background:var(--blue-dim)}
+.upload-icon{width:52px;height:52px;background:var(--blue-dim);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+.upload-title{font-size:1rem;font-weight:700;color:var(--navy);margin-bottom:6px}
+.upload-sub{font-size:.82rem;color:var(--muted);margin-bottom:16px}
+.upload-btn{display:inline-flex;align-items:center;gap:7px;background:var(--blue);color:#fff;padding:10px 22px;border-radius:9px;font-size:.85rem;font-weight:600;cursor:pointer;border:none;transition:background .15s}
+.upload-btn:hover{background:#1d4ed8}
+.file-input{display:none}
+.upload-hint{font-size:.72rem;color:var(--muted);margin-top:10px}
+
+/* Summary cards */
+.summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px}
+@media(max-width:750px){.summary-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:420px){.summary-grid{grid-template-columns:1fr}}
+.stat-card{background:var(--white);border:1px solid var(--blue-border);border-radius:14px;padding:20px}
+.stat-label{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:6px}
+.stat-value{font-size:1.7rem;font-weight:900;color:var(--navy);line-height:1}
+.stat-sub{font-size:.72rem;color:var(--muted);margin-top:5px}
+.stat-card.danger .stat-value{color:var(--red)}
+.stat-card.warn .stat-value{color:var(--orange)}
+.stat-card.money .stat-value{color:var(--green)}
+
+/* Controls bar */
+.controls{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-bottom:20px}
+.threshold-wrap{display:flex;align-items:center;gap:10px;background:var(--white);border:1px solid var(--blue-border);border-radius:10px;padding:8px 14px}
+.threshold-label{font-size:.8rem;font-weight:600;color:var(--navy);white-space:nowrap}
+input[type=range]{width:130px;accent-color:var(--blue)}
+.threshold-val{font-size:.9rem;font-weight:800;color:var(--blue);min-width:38px}
+.filter-btns{display:flex;gap:6px}
+.filter-btn{background:var(--white);border:1px solid var(--blue-border);color:var(--muted);font-size:.8rem;font-weight:600;padding:7px 14px;border-radius:8px;cursor:pointer;transition:all .15s}
+.filter-btn:hover{border-color:var(--blue);color:var(--blue)}
+.filter-btn.active{background:var(--blue);border-color:var(--blue);color:#fff}
+.export-btns{margin-left:auto;display:flex;gap:8px}
+.action-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;font-size:.8rem;font-weight:600;cursor:pointer;border:none;transition:all .15s}
+.btn-csv{background:var(--blue-dim);color:var(--blue);border:1px solid var(--blue-border)}
+.btn-csv:hover{background:var(--blue);color:#fff}
+.btn-pdf{background:var(--navy);color:#fff}
+.btn-pdf:hover{background:#162d4a}
+
+/* Table */
+.table-wrap{background:var(--white);border:1px solid var(--blue-border);border-radius:14px;overflow:hidden}
+.table-wrap table{width:100%;border-collapse:collapse;font-size:.83rem}
+.table-wrap thead th{background:var(--blue-dim);color:var(--navy);font-weight:700;font-size:.72rem;text-transform:uppercase;letter-spacing:.04em;padding:11px 14px;text-align:left;cursor:pointer;user-select:none;white-space:nowrap;border-bottom:1px solid var(--blue-border)}
+.table-wrap thead th:hover{background:#dbeafe}
+.table-wrap thead th .sort-icon{opacity:.4;margin-left:4px;font-size:.65rem}
+.table-wrap thead th.sorted .sort-icon{opacity:1}
+.table-wrap tbody tr{border-bottom:1px solid #f1f5f9;transition:background .1s}
+.table-wrap tbody tr:hover{background:#fafcff}
+.table-wrap tbody td{padding:10px 14px;vertical-align:middle}
+.td-name{font-weight:600;color:var(--navy)}
+.td-cat{font-size:.72rem;color:var(--muted)}
+.td-type{display:inline-block;font-size:.65rem;font-weight:700;padding:2px 7px;border-radius:4px;background:var(--blue-dim);color:var(--blue);text-transform:uppercase}
+.td-price,.td-cost{font-variant-numeric:tabular-nums}
+.margin-pill{display:inline-flex;align-items:center;font-size:.78rem;font-weight:700;padding:3px 10px;border-radius:20px}
+.margin-red{background:rgba(220,38,38,.1);color:var(--red)}
+.margin-orange{background:rgba(234,88,12,.1);color:var(--orange)}
+.margin-yellow{background:rgba(202,138,4,.1);color:var(--yellow)}
+.margin-green{background:rgba(22,163,74,.1);color:var(--green)}
+.flag-pill{font-size:.65rem;font-weight:700;padding:2px 8px;border-radius:4px;background:rgba(220,38,38,.1);color:var(--red)}
+.no-data{text-align:center;padding:60px 20px;color:var(--muted);font-size:.9rem}
+.table-count{font-size:.75rem;color:var(--muted);padding:10px 14px;border-top:1px solid var(--blue-border);background:var(--blue-dim)}
+
+/* Hidden state */
+#results{display:none}
+
+/* Print */
+@media print{
+  nav,footer,.upload-section,.controls,.export-btns{display:none!important}
+  body{background:#fff}
+  .main{padding:0}
+  .table-wrap{border:1px solid #ccc}
+}
+
+footer{background:var(--navy);color:rgba(255,255,255,.5);padding:28px 40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-top:40px}
+.footer-logo{display:flex;align-items:center;gap:8px;text-decoration:none}
+.footer-logo-icon{width:30px;height:30px;background:linear-gradient(135deg,var(--blue),var(--blue-light));border-radius:7px;display:flex;align-items:center;justify-content:center}
+.footer-logo-text{font-size:.95rem;font-weight:700;color:#fff}.footer-logo-text span{color:var(--blue-light)}
+.footer-links{display:flex;gap:20px;font-size:.82rem}
+.footer-links a{color:rgba(255,255,255,.5);text-decoration:none;transition:color .15s}
+.footer-links a:hover{color:#fff}
+.footer-copy{font-size:.75rem;color:rgba(255,255,255,.3);width:100%}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">
+    <div class="nav-logo-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+    <div class="nav-logo-text">Vet <span>Solutions</span></div>
+  </a>
+  <div class="nav-links">
+    <a class="nav-link active" href="reports.html">Reports</a>
+    <a class="nav-link" href="pms.html">PMS Integration</a>
+    <a class="nav-link nav-cta" href="index.html#contact">Contact</a>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="page-label">Margin Analysis</div>
+  <h1>Low Margin Report</h1>
+  <p>Upload your Cornerstone Invoice Item Setup CSV to identify products and services sold at thin or negative margins.</p>
+  <div class="privacy-note">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+    All data processed locally in your browser — nothing is sent to our servers
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- Upload -->
+  <div class="upload-section" id="dropZone">
+    <div class="upload-icon">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+    </div>
+    <div class="upload-title">Upload Invoice Item Setup CSV</div>
+    <div class="upload-sub">Export from Cornerstone: Lists → Invoice Item Setup → Export</div>
+    <label class="upload-btn">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      Choose CSV File
+      <input type="file" class="file-input" id="csvInput" accept=".csv,.txt">
+    </label>
+    <div class="upload-hint">Drag &amp; drop your file here, or click to browse</div>
+  </div>
+
+  <!-- Results (hidden until data loaded) -->
+  <div id="results">
+
+    <!-- Summary cards -->
+    <div class="summary-grid">
+      <div class="stat-card">
+        <div class="stat-label">Items Analyzed</div>
+        <div class="stat-value" id="statTotal">—</div>
+        <div class="stat-sub">Active items with price &amp; cost</div>
+      </div>
+      <div class="stat-card warn">
+        <div class="stat-label">Below Threshold</div>
+        <div class="stat-value" id="statBelow">—</div>
+        <div class="stat-sub" id="statBelowSub">Below 30% margin</div>
+      </div>
+      <div class="stat-card danger">
+        <div class="stat-label">Selling Below Cost</div>
+        <div class="stat-value" id="statNegative">—</div>
+        <div class="stat-sub">Negative margin items</div>
+      </div>
+      <div class="stat-card money">
+        <div class="stat-label">Revenue at Risk</div>
+        <div class="stat-value" id="statRisk">—</div>
+        <div class="stat-sub">Est. annual exposure</div>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+      <div class="threshold-wrap">
+        <span class="threshold-label">Margin Threshold</span>
+        <input type="range" id="thresholdSlider" min="0" max="80" value="30" step="1">
+        <span class="threshold-val" id="thresholdDisplay">30%</span>
+      </div>
+      <div class="filter-btns">
+        <button class="filter-btn active" data-filter="all">Show All</button>
+        <button class="filter-btn" data-filter="below">Below Threshold</button>
+        <button class="filter-btn" data-filter="negative">Below Cost</button>
+      </div>
+      <div class="export-btns">
+        <button class="action-btn btn-csv" id="exportCsv">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Export CSV
+        </button>
+        <button class="action-btn btn-pdf" id="exportPdf">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          Save PDF
+        </button>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th data-col="id">Item ID <span class="sort-icon">↕</span></th>
+            <th data-col="name">Name <span class="sort-icon">↕</span></th>
+            <th data-col="category">Category <span class="sort-icon">↕</span></th>
+            <th data-col="type">Type <span class="sort-icon">↕</span></th>
+            <th data-col="price" style="text-align:right">Price <span class="sort-icon">↕</span></th>
+            <th data-col="cost" style="text-align:right">Cost <span class="sort-icon">↕</span></th>
+            <th data-col="margin" style="text-align:right">Margin% <span class="sort-icon">↕</span></th>
+            <th data-col="flag">Flag <span class="sort-icon">↕</span></th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+      <div class="table-count" id="tableCount"></div>
+    </div>
+
+  </div><!-- /results -->
+
+</div><!-- /main -->
+
+<footer>
+  <a class="footer-logo" href="index.html">
+    <div class="footer-logo-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+    <div class="footer-logo-text">Vet <span>Solutions</span></div>
+  </a>
+  <div class="footer-links">
+    <a href="index.html">Home</a>
+    <a href="reports.html">Reports</a>
+    <a href="pms.html">PMS Integration</a>
+    <a href="index.html#contact">Contact</a>
+  </div>
+  <div class="footer-copy">© 2026 Vet Solutions · Built by Wilde Automations</div>
+</footer>
+
+<script>
+(function(){
+  // ── State ──────────────────────────────────────────────────────────────
+  let allItems = [];          // parsed & filtered rows
+  let displayItems = [];      // after filter-btn filter
+  let sortCol = 'margin';
+  let sortDir = 1;            // 1=asc, -1=desc
+  let threshold = 30;
+  let activeFilter = 'all';
+  let clinicName = '';
+
+  // ── Type labels ────────────────────────────────────────────────────────
+  const TYPE_MAP = {S:'Service',I:'Inventory',G:'Group',D:'Dispensing'};
+
+  // ── DOM refs ──────────────────────────────────────────────────────────
+  const dropZone     = document.getElementById('dropZone');
+  const csvInput     = document.getElementById('csvInput');
+  const results      = document.getElementById('results');
+  const tableBody    = document.getElementById('tableBody');
+  const tableCount   = document.getElementById('tableCount');
+  const thresholdSlider  = document.getElementById('thresholdSlider');
+  const thresholdDisplay = document.getElementById('thresholdDisplay');
+
+  // ── Drag & Drop ───────────────────────────────────────────────────────
+  dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag'));
+  dropZone.addEventListener('drop', e => {
+    e.preventDefault();
+    dropZone.classList.remove('drag');
+    const file = e.dataTransfer.files[0];
+    if (file) processFile(file);
+  });
+  csvInput.addEventListener('change', e => {
+    if (e.target.files[0]) processFile(e.target.files[0]);
+  });
+
+  // ── CSV parsing ───────────────────────────────────────────────────────
+  function parseCSV(text) {
+    const lines = text.split(/\r?\n/);
+    const rows = [];
+    for (const line of lines) {
+      if (!line.trim()) continue;
+      rows.push(parseCSVLine(line));
+    }
+    return rows;
+  }
+
+  function parseCSVLine(line) {
+    const result = [];
+    let current = '';
+    let inQuotes = false;
+    for (let i = 0; i < line.length; i++) {
+      const ch = line[i];
+      if (ch === '"') {
+        if (inQuotes && line[i+1] === '"') { current += '"'; i++; }
+        else inQuotes = !inQuotes;
+      } else if (ch === ',' && !inQuotes) {
+        result.push(current.trim());
+        current = '';
+      } else {
+        current += ch;
+      }
+    }
+    result.push(current.trim());
+    return result;
+  }
+
+  function processFile(file) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        const text = e.target.result;
+        const rows = parseCSV(text);
+        // Skip header row (row 0)
+        const dataRows = rows.slice(1);
+        allItems = [];
+        for (const cols of dataRows) {
+          if (cols.length < 15) continue;
+          const status = cols[14] ? cols[14].trim() : '';
+          if (status !== '1') continue;             // active only
+          const price = parseFloat(cols[10]);
+          const cost  = parseFloat(cols[12]);
+          if (isNaN(price) || isNaN(cost)) continue;
+          if (price <= 0 || cost <= 0) continue;    // both must be > 0
+          const margin = ((price - cost) / price) * 100;
+          allItems.push({
+            id:       (cols[4]  || '').trim(),
+            name:     (cols[5]  || '').trim() || (cols[6] || '').trim(),
+            invoiceDesc: (cols[6] || '').trim(),
+            category: ((cols[1] || '').trim() || (cols[3] || '').trim()),
+            subcat:   (cols[3]  || '').trim(),
+            typeCode: (cols[7]  || '').trim().toUpperCase(),
+            price,
+            cost,
+            margin,
+          });
+          if (!clinicName && cols[13]) clinicName = cols[13].trim();
+        }
+        applyThresholdAndRender();
+        results.style.display = '';
+        sendWebhook();
+      } catch(err) {
+        alert('Could not parse the CSV file. Please check that it is a valid Cornerstone Invoice Item Setup export.\n\n' + err.message);
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  // ── Threshold slider ──────────────────────────────────────────────────
+  thresholdSlider.addEventListener('input', () => {
+    threshold = parseInt(thresholdSlider.value, 10);
+    thresholdDisplay.textContent = threshold + '%';
+    applyThresholdAndRender();
+  });
+
+  // ── Filter buttons ────────────────────────────────────────────────────
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeFilter = btn.dataset.filter;
+      applyThresholdAndRender();
+    });
+  });
+
+  // ── Sort (table headers) ──────────────────────────────────────────────
+  document.querySelectorAll('thead th[data-col]').forEach(th => {
+    th.addEventListener('click', () => {
+      const col = th.dataset.col;
+      if (sortCol === col) { sortDir *= -1; }
+      else { sortCol = col; sortDir = 1; }
+      document.querySelectorAll('thead th').forEach(t => t.classList.remove('sorted'));
+      th.classList.add('sorted');
+      th.querySelector('.sort-icon').textContent = sortDir === 1 ? '↑' : '↓';
+      renderTable();
+    });
+  });
+
+  // ── Core render pipeline ──────────────────────────────────────────────
+  function applyThresholdAndRender() {
+    const belowThreshold = allItems.filter(i => i.margin < threshold);
+    const belowCost      = allItems.filter(i => i.margin < 0);
+
+    // summary stats
+    document.getElementById('statTotal').textContent   = allItems.length.toLocaleString();
+    document.getElementById('statBelow').textContent   = belowThreshold.length.toLocaleString();
+    document.getElementById('statBelowSub').textContent = 'Below ' + threshold + '% margin';
+    document.getElementById('statNegative').textContent = belowCost.length.toLocaleString();
+
+    // revenue at risk: sum of (cost - price) for below-cost items, annualised × 52
+    const weeklyLoss = belowCost.reduce((acc, i) => acc + (i.cost - i.price), 0);
+    const annualRisk = weeklyLoss * 52;
+    document.getElementById('statRisk').textContent = annualRisk > 0
+      ? '$' + Math.round(annualRisk).toLocaleString()
+      : '$0';
+
+    // filter display set
+    if (activeFilter === 'below')    displayItems = belowThreshold;
+    else if (activeFilter === 'negative') displayItems = belowCost;
+    else                             displayItems = [...allItems];
+
+    renderTable();
+  }
+
+  function renderTable() {
+    const sorted = [...displayItems].sort((a, b) => {
+      let va = a[sortCol], vb = b[sortCol];
+      if (typeof va === 'string') va = va.toLowerCase();
+      if (typeof vb === 'string') vb = vb.toLowerCase();
+      if (va < vb) return -sortDir;
+      if (va > vb) return  sortDir;
+      return 0;
+    });
+
+    const rows = sorted.map(item => {
+      const marginClass = item.margin < 0 ? 'margin-red'
+        : item.margin < 15  ? 'margin-orange'
+        : item.margin < threshold ? 'margin-yellow'
+        : 'margin-green';
+      const typeLabel = TYPE_MAP[item.typeCode] || item.typeCode || '—';
+      const flagHtml  = item.margin < threshold
+        ? '<span class="flag-pill">' + (item.margin < 0 ? 'Below Cost' : 'Low Margin') + '</span>'
+        : '<span style="color:var(--muted);font-size:.72rem">OK</span>';
+      return `<tr>
+        <td>${escHtml(item.id)}</td>
+        <td>
+          <div class="td-name">${escHtml(item.name)}</div>
+          ${item.invoiceDesc && item.invoiceDesc !== item.name ? '<div class="td-cat">' + escHtml(item.invoiceDesc) + '</div>' : ''}
+        </td>
+        <td>
+          <div class="td-name" style="font-weight:500">${escHtml(item.category)}</div>
+          ${item.subcat && item.subcat !== item.category ? '<div class="td-cat">' + escHtml(item.subcat) + '</div>' : ''}
+        </td>
+        <td><span class="td-type">${escHtml(typeLabel)}</span></td>
+        <td class="td-price" style="text-align:right">$${item.price.toFixed(2)}</td>
+        <td class="td-cost" style="text-align:right">$${item.cost.toFixed(2)}</td>
+        <td style="text-align:right"><span class="margin-pill ${marginClass}">${item.margin.toFixed(1)}%</span></td>
+        <td>${flagHtml}</td>
+      </tr>`;
+    }).join('');
+
+    tableBody.innerHTML = rows || '<tr><td colspan="8" class="no-data">No items match the current filter.</td></tr>';
+    tableCount.textContent = sorted.length.toLocaleString() + ' item' + (sorted.length !== 1 ? 's' : '') + ' shown';
+  }
+
+  function escHtml(str) {
+    return String(str)
+      .replace(/&/g,'&amp;')
+      .replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;');
+  }
+
+  // ── Export CSV ────────────────────────────────────────────────────────
+  document.getElementById('exportCsv').addEventListener('click', () => {
+    if (!displayItems.length) return;
+    const header = ['Item ID','Name','Invoice Description','Category','Sub-Category','Type','Price','Cost','Margin %','Flag'];
+    const csvRows = [header.join(',')];
+    for (const item of displayItems) {
+      const flag = item.margin < 0 ? 'Below Cost' : item.margin < threshold ? 'Low Margin' : 'OK';
+      const typeLabel = TYPE_MAP[item.typeCode] || item.typeCode || '';
+      csvRows.push([
+        csvCell(item.id), csvCell(item.name), csvCell(item.invoiceDesc),
+        csvCell(item.category), csvCell(item.subcat), csvCell(typeLabel),
+        item.price.toFixed(2), item.cost.toFixed(2), item.margin.toFixed(2), flag
+      ].join(','));
+    }
+    const blob = new Blob([csvRows.join('\n')], {type:'text/csv'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'low-margin-report.csv';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  });
+
+  function csvCell(v) {
+    const s = String(v || '');
+    return s.includes(',') || s.includes('"') || s.includes('\n')
+      ? '"' + s.replace(/"/g,'""') + '"'
+      : s;
+  }
+
+  // ── Export PDF ────────────────────────────────────────────────────────
+  document.getElementById('exportPdf').addEventListener('click', () => window.print());
+
+  // ── n8n Webhook (non-blocking) ────────────────────────────────────────
+  function sendWebhook() {
+    try {
+      const belowThreshold = allItems.filter(i => i.margin < threshold);
+      const belowCost      = allItems.filter(i => i.margin < 0);
+      const worst = [...allItems]
+        .sort((a,b) => a.margin - b.margin)
+        .slice(0,10)
+        .map(i => ({id:i.id, name:i.name, price:i.price, cost:i.cost, margin:parseFloat(i.margin.toFixed(2))}));
+      const payload = {
+        clinicName:          clinicName || 'Unknown',
+        totalItems:          allItems.length,
+        itemsBelowThreshold: belowThreshold.length,
+        itemsBelowCost:      belowCost.length,
+        threshold,
+        topWorstItems:       worst,
+      };
+      fetch('https://n8n.wildeautomations.com/webhook/low-margin-report', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify(payload),
+      }).catch(() => {});
+    } catch(e) {}
+  }
+
+})();
+</script>
+</body>
+</html>
